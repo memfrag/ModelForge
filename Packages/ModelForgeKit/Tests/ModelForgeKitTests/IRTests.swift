@@ -70,4 +70,26 @@ struct IRTests {
         #expect(result.model("A")?.fields[0].type == .scalar(.string))
         #expect(result.model("A")?.fields[1].type == .named("Other", .model))
     }
+
+    @Test("every declaration records where its name is, not just where it starts")
+    func declarationsCarryNameRanges() {
+        let result = AnalyzeSupport.analyze("""
+        model User { id: UUID }
+        enum Status { active }
+        union Action { renamed(User) }
+        typealias ID = UUID
+        """)
+
+        for type in result.module.types {
+            guard let origin = type.origin, let name = type.nameOrigin else {
+                Issue.record("\(type.name) is missing a source range")
+                continue
+            }
+            // The name sits inside the declaration but is not the whole of it — which is
+            // what lets the sidebar's jump select the name rather than flooding the editor.
+            #expect(name.start >= origin.start)
+            #expect(name.end <= origin.end)
+            #expect(name.utf16Range.count == type.name.count)
+        }
+    }
 }

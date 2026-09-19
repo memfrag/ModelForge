@@ -193,7 +193,8 @@ public struct SemanticAnalyzer {
         let definition = ModelDefinition(name: syntax.name.text, fields: fields,
                                          documentation: syntax.documentation.map(\.text),
                                          deprecation: attributes.deprecation,
-                                         sourceFile: file, origin: syntax.range)
+                                         sourceFile: file, origin: syntax.range,
+                              nameOrigin: syntax.name.range)
         modelsByName[definition.name] = definition
         return definition
     }
@@ -249,7 +250,8 @@ public struct SemanticAnalyzer {
         return EnumDefinition(name: syntax.name.text, cases: cases,
                               documentation: syntax.documentation.map(\.text),
                               deprecation: attributes.deprecation,
-                              sourceFile: file, origin: syntax.range)
+                              sourceFile: file, origin: syntax.range,
+                              nameOrigin: syntax.name.range)
     }
 
     private mutating func lowerUnion(_ syntax: UnionSyntax,
@@ -306,7 +308,8 @@ public struct SemanticAnalyzer {
                                isRecursive: false,
                                documentation: syntax.documentation.map(\.text),
                                deprecation: attributes.deprecation,
-                               sourceFile: file, origin: syntax.range)
+                               sourceFile: file, origin: syntax.range,
+                              nameOrigin: syntax.name.range)
     }
 
     private mutating func lowerAlias(_ syntax: TypeAliasSyntax,
@@ -323,7 +326,8 @@ public struct SemanticAnalyzer {
         return AliasDefinition(name: syntax.name.text, target: target,
                                documentation: syntax.documentation.map(\.text),
                                deprecation: attributes.deprecation,
-                               sourceFile: file, origin: syntax.range)
+                               sourceFile: file, origin: syntax.range,
+                              nameOrigin: syntax.name.range)
     }
 
     // MARK: Type resolution

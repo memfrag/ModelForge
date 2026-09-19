@@ -46,15 +46,19 @@ public struct ModelDefinition: Sendable, Hashable {
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
     public let origin: SourceRange?
+    /// Just the declared name, which is what "jump to definition" selects.
+    public let nameOrigin: SourceRange?
 
     public init(name: String, fields: [FieldDefinition], documentation: [String],
-                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?) {
+                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?,
+                nameOrigin: SourceRange? = nil) {
         self.name = name
         self.fields = fields
         self.documentation = documentation
         self.deprecation = deprecation
         self.sourceFile = sourceFile
         self.origin = origin
+        self.nameOrigin = nameOrigin
     }
 
     /// Whether any field carries a default.
@@ -100,15 +104,19 @@ public struct EnumDefinition: Sendable, Hashable {
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
     public let origin: SourceRange?
+    /// Just the declared name, which is what "jump to definition" selects.
+    public let nameOrigin: SourceRange?
 
     public init(name: String, cases: [EnumCaseDefinition], documentation: [String],
-                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?) {
+                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?,
+                nameOrigin: SourceRange? = nil) {
         self.name = name
         self.cases = cases
         self.documentation = documentation
         self.deprecation = deprecation
         self.sourceFile = sourceFile
         self.origin = origin
+        self.nameOrigin = nameOrigin
     }
 }
 
@@ -149,10 +157,13 @@ public struct UnionDefinition: Sendable, Hashable {
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
     public let origin: SourceRange?
+    /// Just the declared name, which is what "jump to definition" selects.
+    public let nameOrigin: SourceRange?
 
     public init(name: String, cases: [UnionCaseDefinition], discriminator: String,
                 isRecursive: Bool, documentation: [String], deprecation: Deprecation?,
-                sourceFile: SourceFileID, origin: SourceRange?) {
+                sourceFile: SourceFileID, origin: SourceRange?,
+                nameOrigin: SourceRange? = nil) {
         self.name = name
         self.cases = cases
         self.discriminator = discriminator
@@ -161,6 +172,7 @@ public struct UnionDefinition: Sendable, Hashable {
         self.deprecation = deprecation
         self.sourceFile = sourceFile
         self.origin = origin
+        self.nameOrigin = nameOrigin
     }
 
     public static let defaultDiscriminator = "type"
@@ -173,15 +185,19 @@ public struct AliasDefinition: Sendable, Hashable {
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
     public let origin: SourceRange?
+    /// Just the declared name, which is what "jump to definition" selects.
+    public let nameOrigin: SourceRange?
 
     public init(name: String, target: TypeRef, documentation: [String],
-                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?) {
+                deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?,
+                nameOrigin: SourceRange? = nil) {
         self.name = name
         self.target = target
         self.documentation = documentation
         self.deprecation = deprecation
         self.sourceFile = sourceFile
         self.origin = origin
+        self.nameOrigin = nameOrigin
     }
 }
 
@@ -206,6 +222,27 @@ public enum TypeDefinition: Sendable, Hashable {
         case .enum(let definition): definition.sourceFile
         case .union(let definition): definition.sourceFile
         case .alias(let definition): definition.sourceFile
+        }
+    }
+
+    /// Where the declaration begins, so the editor can jump to it.
+    public var origin: SourceRange? {
+        switch self {
+        case .model(let definition): definition.origin
+        case .enum(let definition): definition.origin
+        case .union(let definition): definition.origin
+        case .alias(let definition): definition.origin
+        }
+    }
+
+    /// Just the declared name. Selecting this rather than the whole declaration keeps a
+    /// jump from flooding the editor when the type is long.
+    public var nameOrigin: SourceRange? {
+        switch self {
+        case .model(let definition): definition.nameOrigin
+        case .enum(let definition): definition.nameOrigin
+        case .union(let definition): definition.nameOrigin
+        case .alias(let definition): definition.nameOrigin
         }
     }
 

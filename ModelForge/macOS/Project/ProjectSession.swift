@@ -209,6 +209,27 @@ import ModelForgeKit
         return generated?.file(for: id, language: language)
     }
 
+    /// Everything the project declares, sorted by name.
+    ///
+    /// Built from the resolved module rather than from the text, so it reflects what the
+    /// compiler actually understood — a type inside a file that is mid-edit still appears,
+    /// and one that was only half typed does not.
+    var declaredTypes: [DeclaredType] {
+        guard let result else { return [] }
+        return result.module.types.compactMap { type in
+            guard let origin = type.origin else { return nil }
+            return DeclaredType(name: type.name,
+                                kind: type.kind,
+                                file: type.sourceFile,
+                                fileName: fileName(for: type.sourceFile),
+                                origin: origin,
+                                // Selecting the name rather than the whole declaration
+                                // keeps a jump from flooding the editor.
+                                nameOrigin: type.nameOrigin ?? origin)
+        }
+        .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+    }
+
     /// Names the preview highlighter uses so project types colour as types.
     var knownTypeNames: Set<String> { result?.module.typeNames ?? [] }
 
@@ -216,13 +237,23 @@ import ModelForgeKit
 
     /// Reveal a diagnostic: switch files if needed, then ask the editor to select it.
     func reveal(_ diagnostic: Diagnostic) {
-        guard document[diagnostic.range.file] != nil else { return }
-        if case .file(let current) = selection, current != diagnostic.range.file {
-            selection = .file(diagnostic.range.file)
-        } else if case .settings = selection {
-            selection = .file(diagnostic.range.file)
+        reveal(diagnostic.range)
+    }
+
+    /// Reveal a declaration from the types list.
+    func reveal(_ type: DeclaredType) {
+        reveal(type.nameOrigin)
+    }
+
+    /// Switch to the file containing `range` if needed, then ask the editor to select it.
+    private func reveal(_ range: SourceRange) {
+        guard document[range.file] != nil else { return }
+        if case .file(let current) = selection, current == range.file {
+            pendingSelection = range
+            return
         }
-        pendingSelection = diagnostic.range
+        selection = .file(range.file)
+        pendingSelection = range
     }
 
     // MARK: File operations
@@ -337,6 +368,32 @@ import ModelForgeKit
         let mine = document.sources.map { "\($0.name)\u{0}\($0.text)" }.sorted()
         let theirs = onDisk.sources.map { "\($0.name)\u{0}\($0.text)" }.sorted()
         return mine != theirs || document.configuration != onDisk.configuration
+    }
+}
+
+/// One type the project declares, for the sidebar's index.
+struct DeclaredType: Identifiable, Hashable {
+    let name: String
+    let kind: NamedKind
+    let file: SourceFileID
+    let fileName: String
+    let origin: SourceRange
+    let nameOrigin: SourceRange
+
+    var id: String { "\(file.rawValue):\(name)" }
+
+    /// Where it is declared, as the sidebar shows it: `user.model:12`.
+    var location: String {
+        "\(fileName):\(origin.start.line)"
+    }
+
+    var symbolName: String {
+        switch kind {
+        case .model: "cube"
+        case .enum: "list.bullet"
+        case .union: "arrow.triangle.branch"
+        case .alias: "arrow.right"
+        }
     }
 }
 

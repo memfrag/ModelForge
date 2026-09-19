@@ -15,6 +15,10 @@ struct FileListView: View {
     @State private var renameError: String?
     @State private var deleting: ProjectSource?
 
+    /// Remembered across windows and launches — an index you keep collapsed should stay
+    /// collapsed.
+    @AppStorage("sidebar.typesExpanded") private var isTypesExpanded = true
+
     var body: some View {
         List(selection: $session.selection) {
             Section {
@@ -31,6 +35,8 @@ struct FileListView: View {
                         }
                 }
             }
+
+            typesSection
         }
         .listStyle(.sidebar)
         .frame(minWidth: 190, idealWidth: 210, maxWidth: 320)
@@ -53,6 +59,54 @@ struct FileListView: View {
         } message: {
             Text("The code generated from this file will be removed the next time you generate.")
         }
+    }
+
+    // MARK: Types
+
+    /// Every type the project declares, sorted, with the file and line it comes from.
+    ///
+    /// The project shares one flat namespace, so this is the view that actually matches how
+    /// the language works — which file a type lives in is an organisational detail.
+    @ViewBuilder private var typesSection: some View {
+        let types = session.declaredTypes
+        if !types.isEmpty {
+            Section {
+                DisclosureGroup(isExpanded: $isTypesExpanded) {
+                    ForEach(types) { type in
+                        Button {
+                            session.reveal(type)
+                        } label: {
+                            typeRow(type)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                } label: {
+                    Text("Types")
+                        .font(.callout)
+                }
+            }
+        }
+    }
+
+    private func typeRow(_ type: DeclaredType) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: type.symbolName)
+                .foregroundStyle(.secondary)
+                .font(.caption)
+                .frame(width: 14)
+            // Tail truncation, not middle: the start of a type name is what identifies it.
+            Text(type.name)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .layoutPriority(1)
+            Spacer(minLength: 4)
+            Text("\(type.origin.start.line)")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.tertiary)
+                .layoutPriority(2)
+        }
+        .contentShape(Rectangle())
+        .help("\(type.kind.rawValue) — \(type.location)")
     }
 
     // MARK: Rows
