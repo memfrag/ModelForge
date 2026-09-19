@@ -345,3 +345,45 @@ import ModelForgeKit
         #expect(session.undoManager(for: id) !== original)
     }
 }
+
+@Suite("Diagnosed text")
+@MainActor struct DiagnosedTextTests {
+
+    @Test("Nothing is diagnosed before the first compile finishes")
+    func nothingBeforeACompile() {
+        let session = makeSession([("user.model", Sample.user)])
+        #expect(session.diagnosedText(for: session.sources[0].id) == nil)
+    }
+
+    @Test("After a compile it is exactly the text that was compiled")
+    func afterACompile() async {
+        let session = makeSession([("user.model", Sample.user)])
+        session.compileNow()
+        #expect(await waitForType("User", in: session))
+        #expect(session.diagnosedText(for: session.sources[0].id) == Sample.user)
+    }
+
+    @Test("While you type it lags the text on screen, which is the point of having it")
+    func itLagsWhileTyping() async {
+        // The editor compares the two before underlining anything: a range measured in the
+        // previous version of a file does not describe this one.
+        let session = makeSession([("user.model", Sample.user)], debounce: 10_000)
+        session.compileNow()
+        #expect(await waitForType("User", in: session))
+
+        let id = session.sources[0].id
+        session.updateText(Sample.user + "\nmodel Extra {}\n", for: id)
+        session.sourcesChanged()
+
+        #expect(session.diagnosedText(for: id) == Sample.user)
+        #expect(session.diagnosedText(for: id) != session.sources[0].text)
+    }
+
+    @Test("A file the compiler has not seen has no diagnosed text")
+    func anUnknownFile() async {
+        let session = makeSession([("user.model", Sample.user)])
+        session.compileNow()
+        #expect(await waitForType("User", in: session))
+        #expect(session.diagnosedText(for: SourceFileID(99)) == nil)
+    }
+}

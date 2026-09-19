@@ -192,6 +192,15 @@ import ModelForgeKit
         result?.diagnostics(in: id) ?? []
     }
 
+    /// The version of a file the last completed compile ran on.
+    ///
+    /// A diagnostic's range only means something against the text it was measured in, so
+    /// anything drawing in place — the editor's underlines — needs to know whether the
+    /// result it has describes what is on screen or the keystroke before it.
+    func diagnosedText(for id: SourceFileID) -> String? {
+        result?.file(id)?.text
+    }
+
     /// The worst problem in a file, for the badge in the file list.
     func worstSeverity(for id: SourceFileID) -> Diagnostic.Severity? {
         diagnostics(for: id).map(\.severity).max()

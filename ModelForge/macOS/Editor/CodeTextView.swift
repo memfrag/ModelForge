@@ -56,6 +56,14 @@ struct SourceEditorView: NSViewRepresentable {
 
     let source: ProjectSource
     let session: ProjectSession
+    /// This file's problems, underlined in place.
+    let diagnostics: [Diagnostic]
+    /// The version of this file the compiler produced `diagnostics` from.
+    ///
+    /// Carried alongside them because a range only means anything against the text it was
+    /// measured in, and while you are typing the result on hand describes the version
+    /// before your last keystroke.
+    let diagnosedText: String?
     let theme: EditorTheme
     let fontSize: Double
 
@@ -94,6 +102,8 @@ struct SourceEditorView: NSViewRepresentable {
             textView.setSelectedRange(NSRange(location: location, length: 0))
         }
 
+        context.coordinator.applyDiagnostics(in: textView)
+
         if let range = session.pendingSelection {
             context.coordinator.select(range, in: textView)
         }
@@ -112,6 +122,11 @@ struct SourceEditorView: NSViewRepresentable {
         private nonisolated(unsafe) var themeObserver: (any NSObjectProtocol)?
         /// Suppresses the change notification while we are the ones replacing the text.
         private var isAdopting = false
+
+        /// What is currently underlined, so an update that changes neither the problems
+        /// nor the text does no work.
+        private var markedDiagnostics: [Diagnostic]?
+        private var markedText: String?
 
         init(_ parent: SourceEditorView) {
             self.parent = parent
@@ -181,6 +196,50 @@ struct SourceEditorView: NSViewRepresentable {
             storage.beginEditing()
             highlight(storage, range: NSRange(location: 0, length: text.length),
                       text: text, fileID: sourceID)
+            storage.endEditing()
+
+            // `highlight` replaces every attribute in its range, underlines included.
+            markedDiagnostics = nil
+            applyDiagnostics(in: textView)
+        }
+
+        // MARK: Diagnostics
+
+        /// Underline every problem the compiler found in this file.
+        ///
+        /// Applied as text-storage attributes, never as layout-manager temporary ones:
+        /// `NSTextView.scrollableTextView()` is TextKit 2, and reaching for `layoutManager`
+        /// silently downgrades it to TextKit 1.
+        ///
+        /// Nothing is marked until the compiler has seen the text that is on screen. While
+        /// you type, the line you are on loses its underline — the keystroke-tier highlight
+        /// clears it along with the colours — and gets it back when the next compile lands.
+        /// Marking the stale ranges in between is what would make them crawl as you type.
+        func applyDiagnostics(in textView: NSTextView) {
+            guard let storage = textView.textStorage else { return }
+            guard let diagnosed = parent.diagnosedText, diagnosed == storage.string else { return }
+
+            let diagnostics = parent.diagnostics
+            guard markedDiagnostics != diagnostics || markedText != diagnosed else { return }
+            markedDiagnostics = diagnostics
+            markedText = diagnosed
+
+            let text = storage.string as NSString
+            let whole = NSRange(location: 0, length: text.length)
+
+            storage.beginEditing()
+            storage.removeAttribute(.underlineStyle, range: whole)
+            storage.removeAttribute(.underlineColor, range: whole)
+            storage.removeAttribute(.toolTip, range: whole)
+
+            for diagnostic in diagnostics {
+                guard let range = DiagnosticDecoration.range(for: diagnostic, in: text) else { continue }
+                storage.addAttributes([
+                    .underlineStyle: DiagnosticDecoration.underlineStyle,
+                    .underlineColor: DiagnosticDecoration.color(for: diagnostic.severity),
+                    .toolTip: DiagnosticDecoration.tooltip(for: diagnostic)
+                ], range: range)
+            }
             storage.endEditing()
         }
 

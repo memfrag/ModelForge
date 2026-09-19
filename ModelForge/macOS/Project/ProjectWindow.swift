@@ -89,6 +89,8 @@ struct ProjectWindow: View {
         VStack(spacing: 0) {
             SourceEditorView(source: source,
                              session: session,
+                             diagnostics: session.diagnostics(for: source.id),
+                             diagnosedText: session.diagnosedText(for: source.id),
                              theme: theme,
                              fontSize: settings.editorFontSize)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
