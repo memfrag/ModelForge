@@ -124,6 +124,47 @@ extension TypeGraph {
         return TypeGraph(nodes: nodes, edges: edges)
     }
 
+    /// The graph cut down to one file, keeping one hop of context around it.
+    ///
+    /// Not just the file's own types: a reference graph showing a file in isolation has
+    /// nothing left to reference, which is the opposite of the point. Everything directly
+    /// connected to one of the file's types comes along, and the caller can tell the two
+    /// apart by each node's `sourceFile`.
+    ///
+    /// The subgraph is laid out again from scratch, so it reads as its own picture rather
+    /// than as the big one with pieces missing.
+    public func focused(on file: SourceFileID) -> TypeGraph {
+        let own = Set(nodes.filter { $0.sourceFile == file }.map(\.name))
+        guard !own.isEmpty else { return TypeGraph(nodes: [], edges: []) }
+
+        var kept = own
+        for edge in edges {
+            if own.contains(edge.from) { kept.insert(edge.to) }
+            if own.contains(edge.to) { kept.insert(edge.from) }
+        }
+
+        // Only edges with both ends still present, and only those touching the file — a
+        // line between two neighbours says nothing about the file being looked at.
+        let keptEdges = edges.filter {
+            kept.contains($0.from) && kept.contains($0.to)
+                && (own.contains($0.from) || own.contains($0.to))
+        }
+
+        let names = nodes.filter { kept.contains($0.name) }.map(\.name)
+        let layers = TypeGraph.layerize(names, edges: keptEdges.filter { !$0.isBackEdge })
+        let orders = TypeGraph.order(names, layers: layers, edges: keptEdges)
+
+        let subset = nodes.filter { kept.contains($0.name) }.map { node in
+            Node(name: node.name,
+                 kind: node.kind,
+                 sourceFile: node.sourceFile,
+                 origin: node.origin,
+                 layer: layers[node.name] ?? 0,
+                 order: orders[node.name] ?? 0)
+        }
+        return TypeGraph(nodes: subset, edges: keptEdges)
+    }
+
     /// Everything a declaration points at, with the field or case responsible.
     private static func references(of type: TypeDefinition) -> [(String, String)] {
         switch type {
@@ -191,7 +232,7 @@ extension TypeGraph {
     }
 
     /// Longest-path layering: a type sits one layer below everything that refers to it.
-    private static func layerize(_ nodes: [String], edges: [Edge]) -> [String: Int] {
+    fileprivate static func layerize(_ nodes: [String], edges: [Edge]) -> [String: Int] {
         var incoming: [String: [String]] = [:]
         var outgoing: [String: [String]] = [:]
         for edge in edges {
@@ -231,7 +272,7 @@ extension TypeGraph {
     /// A couple of passes of the barycentre heuristic — each node moves next to the average
     /// position of what refers to it — with ties broken by name so the same schema always
     /// draws the same way.
-    private static func order(_ nodes: [String],
+    fileprivate static func order(_ nodes: [String],
                               layers: [String: Int],
                               edges: [Edge]) -> [String: Int] {
         var byLayer: [Int: [String]] = [:]

@@ -18,6 +18,9 @@ struct TypeGraphView: View {
 
     @State private var zoom: Double = 1
     @State private var hovered: String?
+    /// Which file the graph is cut down to, or `nil` for the whole project.
+    @State private var focus: SourceFileID?
+    @AppStorage("graph.showsLabels") private var showsLabels = true
     /// The zoom at which the whole graph fits the visible area, or 1 when it already does.
     @State private var fitZoom: Double = 1
 
@@ -26,7 +29,8 @@ struct TypeGraphView: View {
     }
 
     private var graph: TypeGraph {
-        session.typeGraph
+        guard let focus else { return session.typeGraph }
+        return session.typeGraph.focused(on: focus)
     }
 
     /// Held rather than recomputed in `body`, which runs whenever the pointer moves onto
@@ -41,17 +45,36 @@ struct TypeGraphView: View {
         }
         .background(PaneBackground())
         .onChange(of: graph, initial: true) { layout = TypeGraphLayout(graph: graph, font: font) }
+        .onChange(of: session.sources.map(\.id)) { _, ids in
+            if let focus, !ids.contains(focus) { self.focus = nil }
+        }
     }
 
     // MARK: Chrome
 
     private var header: some View {
         HStack(spacing: 10) {
+            Picker("", selection: $focus) {
+                Text("Whole project").tag(SourceFileID?.none)
+                Divider()
+                ForEach(session.sources) { file in
+                    Text(file.displayName).tag(SourceFileID?.some(file.id))
+                }
+            }
+            .labelsHidden()
+            .fixedSize()
+            .help("Show one file's types, with whatever they connect to")
+
             Text(summary)
                 .font(.callout)
                 .foregroundStyle(.secondary)
 
             Spacer()
+
+            Toggle("Labels", isOn: $showsLabels)
+                .toggleStyle(.checkbox)
+                .controlSize(.small)
+                .help("Name the field or case each line comes from")
 
             Image(systemName: "minus.magnifyingglass")
                 .foregroundStyle(.secondary)
@@ -75,8 +98,13 @@ struct TypeGraphView: View {
         guard !graph.isEmpty else { return "No types yet" }
         let types = graph.nodes.count
         let links = graph.edges.count
-        return "\(types) \(types == 1 ? "type" : "types"), "
+        var text = "\(types) \(types == 1 ? "type" : "types"), "
             + "\(links) \(links == 1 ? "reference" : "references")"
+        if let focus {
+            let context = graph.nodes.count { $0.sourceFile != focus }
+            if context > 0 { text += " — \(context) from elsewhere" }
+        }
+        return text
     }
 
     // MARK: Canvas
@@ -125,12 +153,9 @@ struct TypeGraphView: View {
                 let isLit = hovered == positioned.edge.from || hovered == positioned.edge.to
                 var path = Path()
                 path.move(to: positioned.start)
-                // A vertical-tangent curve, so a line leaving a node reads as leaving its
-                // bottom edge rather than shooting off at an angle.
-                let lift = max(16, abs(positioned.end.y - positioned.start.y) / 2)
                 path.addCurve(to: positioned.end,
-                              control1: CGPoint(x: positioned.start.x, y: positioned.start.y + lift),
-                              control2: CGPoint(x: positioned.end.x, y: positioned.end.y - lift))
+                              control1: positioned.control1,
+                              control2: positioned.control2)
 
                 let style = StrokeStyle(lineWidth: isLit ? 1.8 : 1,
                                         // A reference that closes a cycle is drawn dashed:
@@ -139,15 +164,47 @@ struct TypeGraphView: View {
                 context.stroke(path,
                                with: .color(isLit ? .accentColor : .secondary.opacity(0.35)),
                                style: style)
+
+                if showsLabels || isLit {
+                    draw(positioned.edge.label,
+                         at: positioned.midpoint,
+                         lit: isLit,
+                         in: &context)
+                }
             }
         }
         .frame(width: layout.size.width, height: layout.size.height)
         .allowsHitTesting(false)
     }
 
+    /// The field or case a line comes from, on a chip so it stays readable where it
+    /// crosses another line.
+    private func draw(_ label: String,
+                      at point: CGPoint,
+                      lit: Bool,
+                      in context: inout GraphicsContext) {
+        var text = context.resolve(
+            Text(label)
+                .font(.system(size: 9, weight: lit ? .semibold : .regular)))
+        text.shading = .color(lit ? .accentColor : .secondary)
+
+        let size = text.measure(in: CGSize(width: 200, height: 40))
+        let chip = CGRect(x: point.x - size.width / 2 - 3,
+                          y: point.y - size.height / 2 - 1,
+                          width: size.width + 6,
+                          height: size.height + 2)
+
+        context.fill(Path(roundedRect: chip, cornerRadius: 3),
+                     with: .color(Color(nsColor: .windowBackgroundColor).opacity(0.85)))
+        context.draw(text, at: point, anchor: .center)
+    }
+
     private func nodeView(_ positioned: TypeGraphLayout.PositionedNode) -> some View {
         let node = positioned.node
         let isCurrentFile = session.selectedFileID == node.sourceFile
+        // While focused on a file, everything pulled in from elsewhere is context: still
+        // there to give the references something to point at, but visibly not the subject.
+        let isContext = focus != nil && node.sourceFile != focus
 
         return Button {
             session.reveal(node)
@@ -173,10 +230,13 @@ struct TypeGraphView: View {
                                           lineWidth: hovered == node.name || isCurrentFile ? 1.5 : 1)
                     }
             }
+            .opacity(isContext ? 0.55 : 1)
         }
         .buttonStyle(.plain)
         .onHover { hovered = $0 ? node.name : (hovered == node.name ? nil : hovered) }
-        .help("\(node.kind.rawValue) \(node.name) — in \(session.fileName(for: node.sourceFile))")
+        .help(isContext
+              ? "\(node.kind.rawValue) \(node.name) — from \(session.fileName(for: node.sourceFile))"
+              : "\(node.kind.rawValue) \(node.name) — in \(session.fileName(for: node.sourceFile))")
     }
 
     /// Never magnifies: a four-node schema blown up to fill the window looks broken, so

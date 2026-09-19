@@ -138,6 +138,37 @@ import ModelForgeKit
         #expect(back!.end.y >= back!.start.y || back!.end.y <= back!.start.y)
     }
 
+    @Test("A label sits on the curve, in the gap between two rows")
+    func labelsSitOnTheCurve() {
+        // Halfway along a cubic is a weighted average of its four points, not the midpoint
+        // of its ends — using the latter puts the label off the line it belongs to.
+        let result = layout("""
+        model A { b: B }
+        model B { id: UUID }
+        """)
+
+        let edge = try? #require(result.edges.first)
+        let a = try? #require(result.frame(of: "A"))
+        let b = try? #require(result.frame(of: "B"))
+
+        #expect(edge!.midpoint.y > a!.maxY)
+        #expect(edge!.midpoint.y < b!.minY)
+        #expect(edge!.edge.label == "b")
+    }
+
+    @Test("A line between two nodes in the same column is labelled on that line")
+    func labelsOnAStraightRun() {
+        let result = layout("""
+        model A { b: B }
+        model B { id: UUID }
+        """)
+
+        let edge = try? #require(result.edges.first)
+        // Both nodes are centred in their rows, so the curve is vertical and so is the
+        // label's position.
+        #expect(abs(edge!.midpoint.x - edge!.start.x) < 0.5)
+    }
+
     @Test("A longer name gets a wider node, down to a floor")
     func nodeWidthFollowsTheName() {
         let short = TypeGraphLayout.width(of: "A", font: font)

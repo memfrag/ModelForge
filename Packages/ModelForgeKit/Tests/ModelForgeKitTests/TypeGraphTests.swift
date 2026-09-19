@@ -261,3 +261,104 @@ struct TypeGraphTests {
         #expect(result["User"]?.origin?.start.line == 1)
     }
 }
+
+@Suite("Type graph focused on a file")
+struct TypeGraphFocusTests {
+
+    /// Two files: `user.model` declares User and Address, `order.model` the rest.
+    private func twoFileGraph() -> (TypeGraph, user: SourceFileID, order: SourceFileID) {
+        let files = [
+            SourceFile(id: SourceFileID(0), name: "user.model", text: """
+            model User {
+                id: UUID
+                address: Address
+            }
+            model Address { street: String }
+            """),
+            SourceFile(id: SourceFileID(1), name: "order.model", text: """
+            model Order {
+                buyer: User
+                payment: Payment
+            }
+            union Payment { card(Card) }
+            model Card { number: String }
+            model Unrelated { note: String }
+            """)
+        ]
+        return (TypeGraph.build(from: Compiler.compile(files).module),
+                SourceFileID(0), SourceFileID(1))
+    }
+
+    @Test("A file's own types are all there")
+    func ownTypesAreKept() {
+        let (graph, user, _) = twoFileGraph()
+        let focused = graph.focused(on: user)
+
+        #expect(focused["User"] != nil)
+        #expect(focused["Address"] != nil)
+    }
+
+    @Test("Types directly connected from other files come along as context")
+    func neighboursComeAlong() {
+        // A file shown in isolation has nothing left to reference, which is the opposite
+        // of the point of a reference graph.
+        let (graph, user, order) = twoFileGraph()
+        let focused = graph.focused(on: user)
+
+        #expect(focused["Order"] != nil)
+        #expect(focused["Order"]?.sourceFile == order)
+    }
+
+    @Test("Types with no connection to the file are left out")
+    func distantTypesAreDropped() {
+        let (graph, user, _) = twoFileGraph()
+        let focused = graph.focused(on: user)
+
+        // Payment and Card reach User only through Order, which is two hops.
+        #expect(focused["Payment"] == nil)
+        #expect(focused["Card"] == nil)
+        #expect(focused["Unrelated"] == nil)
+    }
+
+    @Test("A line between two pieces of context is not drawn")
+    func edgesBetweenNeighboursAreDropped() {
+        // It says nothing about the file being looked at.
+        let (graph, _, order) = twoFileGraph()
+        let focused = graph.focused(on: order)
+        let own = Set(focused.nodes.filter { $0.sourceFile == order }.map(\.name))
+
+        #expect(focused.edges.allSatisfy { own.contains($0.from) || own.contains($0.to) })
+    }
+
+    @Test("Every edge kept has both ends still in the picture")
+    func edgesAreWellFormed() {
+        let (graph, user, _) = twoFileGraph()
+        let focused = graph.focused(on: user)
+        let present = Set(focused.nodes.map(\.name))
+
+        #expect(focused.edges.allSatisfy { present.contains($0.from) && present.contains($0.to) })
+    }
+
+    @Test("The subset is laid out again, not left with the whole graph's layers")
+    func theSubsetIsRelayered() {
+        // Otherwise a focused view starts at layer 3 with nothing above it.
+        let (graph, user, _) = twoFileGraph()
+        let focused = graph.focused(on: user)
+
+        #expect(focused.nodes.map(\.layer).min() == 0)
+        #expect(Set(focused.nodes(inLayer: 0).map(\.order)).count
+                == focused.nodes(inLayer: 0).count)
+    }
+
+    @Test("A file that declares nothing focuses to nothing")
+    func anEmptyFile() {
+        let (graph, _, _) = twoFileGraph()
+        #expect(graph.focused(on: SourceFileID(99)).isEmpty)
+    }
+
+    @Test("Focusing is deterministic too")
+    func focusIsDeterministic() {
+        let (graph, user, _) = twoFileGraph()
+        #expect(graph.focused(on: user) == graph.focused(on: user))
+    }
+}

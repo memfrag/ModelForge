@@ -27,8 +27,19 @@ struct TypeGraphLayout: Equatable {
         let edge: TypeGraph.Edge
         let start: CGPoint
         let end: CGPoint
+        /// Pulled straight out of the node it leaves and straight into the one it meets,
+        /// so a line reads as leaving a bottom edge rather than shooting off at an angle.
+        let control1: CGPoint
+        let control2: CGPoint
 
         var id: String { edge.id }
+
+        /// Where the label sits: the curve at its halfway point, which for a cubic is a
+        /// weighted average of its four points rather than the midpoint of its ends.
+        var midpoint: CGPoint {
+            CGPoint(x: (start.x + 3 * control1.x + 3 * control2.x + end.x) / 8,
+                    y: (start.y + 3 * control1.y + 3 * control2.y + end.y) / 8)
+        }
     }
 
     var nodes: [PositionedNode] = []
@@ -103,10 +114,15 @@ struct TypeGraphLayout: Equatable {
             // A back edge points up the graph, so it leaves the top of its source and
             // arrives at the bottom of its target — the opposite of every other line.
             let goingDown = from.frame.midY < to.frame.midY
+            let start = goingDown ? from.bottomCentre : from.topCentre
+            let end = goingDown ? to.topCentre : to.bottomCentre
+            let lift = max(16, abs(end.y - start.y) / 2) * (goingDown ? 1 : -1)
             return PositionedEdge(
                 edge: edge,
-                start: goingDown ? from.bottomCentre : from.topCentre,
-                end: goingDown ? to.topCentre : to.bottomCentre)
+                start: start,
+                end: end,
+                control1: CGPoint(x: start.x, y: start.y + lift),
+                control2: CGPoint(x: end.x, y: end.y - lift))
         }
     }
 
