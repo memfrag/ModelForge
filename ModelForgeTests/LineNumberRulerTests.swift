@@ -111,3 +111,86 @@ import ModelForgeKit
         #expect(textView.textLayoutManager != nil)
     }
 }
+
+@Suite("Gutter problem markers")
+@MainActor struct GutterMarkerTests {
+
+    private func diagnostic(line: Int,
+                            severity: Diagnostic.Severity,
+                            message: String) -> Diagnostic {
+        let location = SourceLocation(offset: line * 10, line: line, column: 1)
+        return Diagnostic(code: severity == .error ? .unknownType : .reservedName,
+                          severity: severity,
+                          message: message,
+                          range: SourceRange(file: SourceFileID(0), start: location, end: location))
+    }
+
+    @Test("Nothing to mark in a clean file")
+    func noDiagnostics() {
+        #expect(LineNumberRulerView.problemMarkers(from: []).isEmpty)
+    }
+
+    @Test("Each problem marks its own line")
+    func oneMarkerPerLine() {
+        let markers = LineNumberRulerView.problemMarkers(from: [
+            diagnostic(line: 7, severity: .error, message: "unknown type 'Usre'"),
+            diagnostic(line: 9, severity: .warning, message: "'class' is reserved")
+        ])
+
+        #expect(markers.count == 2)
+        #expect(markers[7]?.severity == .error)
+        #expect(markers[7]?.message == "unknown type 'Usre'")
+        #expect(markers[9]?.severity == .warning)
+        #expect(markers[3] == nil)
+    }
+
+    @Test("A line with both an error and a warning is marked as an error")
+    func theWorstSeverityWins() {
+        // Whichever order they arrive in — a line is as broken as its worst problem.
+        let warningFirst = LineNumberRulerView.problemMarkers(from: [
+            diagnostic(line: 4, severity: .warning, message: "reserved"),
+            diagnostic(line: 4, severity: .error, message: "unknown type")
+        ])
+        let errorFirst = LineNumberRulerView.problemMarkers(from: [
+            diagnostic(line: 4, severity: .error, message: "unknown type"),
+            diagnostic(line: 4, severity: .warning, message: "reserved")
+        ])
+
+        #expect(warningFirst[4]?.severity == .error)
+        #expect(errorFirst[4]?.severity == .error)
+        #expect(warningFirst[4]?.message.hasPrefix("unknown type") == true)
+        #expect(errorFirst[4]?.message.hasPrefix("unknown type") == true)
+    }
+
+    @Test("A line with several problems says how many, so one message is not the whole story")
+    func severalOnOneLine() {
+        let markers = LineNumberRulerView.problemMarkers(from: [
+            diagnostic(line: 2, severity: .error, message: "first"),
+            diagnostic(line: 2, severity: .error, message: "second"),
+            diagnostic(line: 2, severity: .error, message: "third")
+        ])
+
+        #expect(markers.count == 1)
+        #expect(markers[2]?.message.contains("(+2 more)") == true)
+    }
+
+    @Test("A single problem is not given a count")
+    func oneProblemHasNoCount() {
+        let markers = LineNumberRulerView.problemMarkers(from: [
+            diagnostic(line: 2, severity: .error, message: "only one")
+        ])
+        #expect(markers[2]?.message == "only one")
+    }
+
+    @Test("The marker lane is reserved whether or not anything is wrong")
+    func theLaneIsAlwaysReserved() {
+        // A gutter that widened the moment you made a mistake would shift the code
+        // sideways underneath you.
+        let font = LineNumberRulerView.rulerFont(matching: nil)
+        let plain = LineNumberRulerView.thickness(forLineCount: 50, font: font)
+        let withLane = LineNumberRulerView.thickness(forLineCount: 50, font: font,
+                                                     showsMarkers: true)
+
+        #expect(withLane == plain + LineNumberRulerView.markerLaneWidth)
+    }
+}

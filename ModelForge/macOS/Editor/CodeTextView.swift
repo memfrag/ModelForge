@@ -77,7 +77,8 @@ struct SourceEditorView: NSViewRepresentable {
         // on the same pass as every later edit.
         textView.textStorage?.delegate = context.coordinator
 
-        let ruler = LineNumberRulerView(textView: textView, scrollView: scrollView)
+        let ruler = LineNumberRulerView(textView: textView, scrollView: scrollView,
+                                        showsMarkers: true)
         scrollView.verticalRulerView = ruler
         scrollView.hasVerticalRuler = true
         scrollView.rulersVisible = true
@@ -111,6 +112,7 @@ struct SourceEditorView: NSViewRepresentable {
         }
 
         context.coordinator.applyDiagnostics(in: textView)
+        context.coordinator.applyGutterMarkers()
 
         if let range = session.pendingSelection {
             context.coordinator.select(range, in: textView)
@@ -234,6 +236,16 @@ struct SourceEditorView: NSViewRepresentable {
         /// you type, the line you are on loses its underline — the keystroke-tier highlight
         /// clears it along with the colours — and gets it back when the next compile lands.
         /// Marking the stale ranges in between is what would make them crawl as you type.
+        /// Dot the gutter beside every line with a problem on it.
+        ///
+        /// Deliberately not held to the same rule as the underlines, which refuse to mark
+        /// text the compiler has not seen. An underline in the wrong place points at the
+        /// wrong word; a gutter dot one line out for the length of a debounce is a signpost
+        /// slightly off, and far less distracting than dots blinking out as you type.
+        func applyGutterMarkers() {
+            ruler?.problemMarkers = LineNumberRulerView.problemMarkers(from: parent.diagnostics)
+        }
+
         func applyDiagnostics(in textView: NSTextView) {
             guard let storage = textView.textStorage else { return }
             guard let diagnosed = parent.diagnosedText, diagnosed == storage.string else { return }
@@ -314,6 +326,13 @@ struct GeneratedCodeView: NSViewRepresentable {
         let (scrollView, textView) = CodeTextViewFactory.makeScrollView(editable: false,
                                                                         fontSize: fontSize)
         context.coordinator.textView = textView
+
+        let ruler = LineNumberRulerView(textView: textView, scrollView: scrollView)
+        scrollView.verticalRulerView = ruler
+        scrollView.hasVerticalRuler = true
+        scrollView.rulersVisible = true
+        context.coordinator.ruler = ruler
+
         context.coordinator.apply(self, to: textView, preservingScroll: false)
         return scrollView
     }
@@ -329,6 +348,7 @@ struct GeneratedCodeView: NSViewRepresentable {
     final class Coordinator {
 
         weak var textView: NSTextView?
+        weak var ruler: LineNumberRulerView?
         private var lastText: String?
         private var lastFontSize: Double?
         private nonisolated(unsafe) var themeObserver: (any NSObjectProtocol)?
@@ -360,6 +380,7 @@ struct GeneratedCodeView: NSViewRepresentable {
 
             let visible = textView.enclosingScrollView?.contentView.bounds.origin
             textView.textStorage?.setAttributedString(attributedString(for: view))
+            ruler?.refresh()
 
             if preservingScroll, let visible {
                 textView.enclosingScrollView?.contentView.scroll(to: visible)

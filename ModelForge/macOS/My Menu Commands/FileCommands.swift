@@ -33,21 +33,29 @@ struct ViewCommands: Commands {
 
     @FocusedValue(\.projectSession) private var session
 
-    @AppStorage("settings.preview.layout") private var layoutRaw = PreviewLayout.single.rawValue
+    private var settings: AppSettings { AppEnvironment.default.appSettings }
 
     var body: some Commands {
         CommandGroup(after: .toolbar) {
             Section {
                 Button("Show Swift") {
+                    settings.previewLayout = .single
                     session?.previewLanguage = .swift
                 }
                 .keyboardShortcut("1", modifiers: [.command, .control])
                 .disabled(session == nil)
 
                 Button("Show Kotlin") {
+                    settings.previewLayout = .single
                     session?.previewLanguage = .kotlin
                 }
                 .keyboardShortcut("2", modifiers: [.command, .control])
+                .disabled(session == nil)
+
+                Button("Show Both") {
+                    settings.previewLayout = .both
+                }
+                .keyboardShortcut("3", modifiers: [.command, .control])
                 .disabled(session == nil)
             }
 

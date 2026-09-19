@@ -74,9 +74,8 @@ struct ProjectWindow: View {
                 HSplitView {
                     editorColumn(for: source)
                     CodePreviewPane(session: session,
-                                    theme: theme,
-                                    fontSize: settings.editorFontSize,
-                                    layout: settings.previewLayout)
+                                    settings: settings,
+                                    theme: theme)
                         .frame(minWidth: 320, idealWidth: 460, maxWidth: .infinity)
                 }
             } else {
