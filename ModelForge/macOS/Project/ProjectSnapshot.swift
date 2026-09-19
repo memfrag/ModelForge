@@ -64,7 +64,7 @@ nonisolated struct ProjectSnapshot: Sendable, Hashable {
                 let loaded = try ConfigurationStore.load(from: data)
                 configuration = loaded.configuration
                 rawConfiguration = loaded.raw
-            } catch let error as ConfigurationStore.LoadError {
+            } catch {
                 switch error {
                 case .newerFormat(let found, let supported):
                     throw ProjectLoadError.newerFormat(found: found, supported: supported)

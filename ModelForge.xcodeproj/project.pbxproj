@@ -38,7 +38,6 @@
 /* Begin PBXFileReference section */
 		49F1A39D6E229ADE479CB713 /* AppDesign */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppDesign; path = Packages/AppDesign; sourceTree = SOURCE_ROOT; };
 		A89F95A1A8D4D90B814A284D /* ModelForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1B2C3D4E5F60718293A4B5C /* ModelForgeKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ModelForgeKit; path = Packages/ModelForgeKit; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -103,7 +102,6 @@
 			isa = PBXGroup;
 			children = (
 				49F1A39D6E229ADE479CB713 /* AppDesign */,
-				B1B2C3D4E5F60718293A4B5C /* ModelForgeKit */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
