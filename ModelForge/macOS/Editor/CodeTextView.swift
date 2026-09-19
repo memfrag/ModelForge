@@ -76,6 +76,13 @@ struct SourceEditorView: NSViewRepresentable {
         // Installed before `string` is set below so the initial contents are highlighted
         // on the same pass as every later edit.
         textView.textStorage?.delegate = context.coordinator
+
+        let ruler = LineNumberRulerView(textView: textView, scrollView: scrollView)
+        scrollView.verticalRulerView = ruler
+        scrollView.hasVerticalRuler = true
+        scrollView.rulersVisible = true
+        context.coordinator.ruler = ruler
+
         context.coordinator.adopt(source, in: textView)
 
         return scrollView
@@ -88,6 +95,7 @@ struct SourceEditorView: NSViewRepresentable {
         if textView.font?.pointSize != CGFloat(fontSize) {
             textView.font = CodeTextViewFactory.font(size: fontSize)
             context.coordinator.rehighlightEverything()
+            context.coordinator.ruler?.refresh()
         }
 
         // Switching files swaps the text and the undo history together.
@@ -118,6 +126,7 @@ struct SourceEditorView: NSViewRepresentable {
         private(set) var sourceID: SourceFileID?
         private var fileName = ""
         weak var textView: NSTextView?
+        weak var ruler: LineNumberRulerView?
 
         private nonisolated(unsafe) var themeObserver: (any NSObjectProtocol)?
         /// Suppresses the change notification while we are the ones replacing the text.
@@ -154,6 +163,7 @@ struct SourceEditorView: NSViewRepresentable {
             isAdopting = false
             textView.setSelectedRange(NSRange(location: 0, length: 0))
             rehighlightEverything()
+            ruler?.refresh()
         }
 
         /// The per-file undo manager. `NSTextView` asks its delegate for this, which is
@@ -188,6 +198,15 @@ struct SourceEditorView: NSViewRepresentable {
             let text = textStorage.string as NSString
             let paragraph = text.paragraphRange(for: editedRange)
             highlight(textStorage, range: paragraph, text: text, fileID: sourceID)
+
+            // Only when the edit changed the line structure, or moved everything after it.
+            if delta != 0 || editedRange.length > 0 {
+                ruler?.refresh()
+            }
+        }
+
+        func textViewDidChangeSelection(_ notification: Notification) {
+            ruler?.refreshCurrentLine()
         }
 
         func rehighlightEverything() {
