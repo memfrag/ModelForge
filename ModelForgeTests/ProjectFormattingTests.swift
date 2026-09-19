@@ -18,6 +18,26 @@ import ModelForgeKit
         #expect(!makeSession().hasUnformattedFiles)
     }
 
+    @Test("A file the formatter refuses is not something to offer formatting for")
+    func unparseableFilesAreNotOffered() {
+        // Otherwise the menu item stays enabled for as long as the syntax error lasts, and
+        // choosing it does nothing.
+        #expect(!makeSession([("broken.model", Sample.unparseable)]).hasUnformattedFiles)
+        #expect(!makeSession([("broken.model", Sample.unparseable),
+                              ("tidy.model", Sample.user)]).hasUnformattedFiles)
+        #expect(makeSession([("broken.model", Sample.unparseable),
+                             ("messy.model", Sample.messy)]).hasUnformattedFiles)
+    }
+
+    @Test("What is offered is exactly what formatting will change")
+    func theOfferMatchesTheWork() {
+        let session = makeSession([("broken.model", Sample.unparseable),
+                                   ("messy.model", Sample.messy)])
+        #expect(session.hasUnformattedFiles)
+        #expect(session.formatAllFiles() == 1)
+        #expect(!session.hasUnformattedFiles)
+    }
+
     @Test("Formatting rewrites what needs it and reports how many files changed")
     func formattingRewritesFiles() {
         let session = makeSession([("messy.model", Sample.messy), ("tidy.model", Sample.user)])

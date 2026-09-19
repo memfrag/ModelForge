@@ -296,9 +296,17 @@ import ModelForgeKit
 
     // MARK: Formatting
 
-    /// Whether anything in the project is not in canonical layout.
+    /// Whether formatting the project would actually change anything.
+    ///
+    /// A file the formatter refuses does not count. `isFormatted` answers false for one,
+    /// because there is no canonical form to compare against — but taking that as "needs
+    /// formatting" leaves the menu item enabled forever on a project with a syntax error,
+    /// offering work it will then decline to do.
     var hasUnformattedFiles: Bool {
-        document.sources.contains { !SourceFormatter.isFormatted($0.sourceFile) }
+        document.sources.contains { source in
+            guard let formatted = try? SourceFormatter.format(source.sourceFile) else { return false }
+            return formatted != source.text
+        }
     }
 
     /// Rewrite every file in the canonical layout.
