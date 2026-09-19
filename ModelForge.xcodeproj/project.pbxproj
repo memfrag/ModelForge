@@ -1,0 +1,786 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05873CA4AAC12962D5728192 /* Constructs in Frameworks */ = {isa = PBXBuildFile; productRef = 56671155D5D916AD9C1FB0D6 /* Constructs */; };
+		1202AF1B815C94DBDE14E54F /* SensibleStyling in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD8B0784303D80B96FD4C49 /* SensibleStyling */; };
+		1B135662F707D0495236A475 /* CollectionKit in Frameworks */ = {isa = PBXBuildFile; productRef = E6E36CABE14EAC6AF1621401 /* CollectionKit */; };
+		3527314D8F57BB2303D5B0A3 /* SystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6E0B8130FE0D2B87B606ADA9 /* SystemKit */; };
+		389EDFD205287F36156C4605 /* SettingsUI in Frameworks */ = {isa = PBXBuildFile; productRef = BF28007D487184AB37F51537 /* SettingsUI */; };
+		3B0FF1CB1FE693191CCF227D /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = BFC4DE29E61EDCC74AA43BBB /* MarkdownUI */; };
+		4198263A768503A2AABA6850 /* AppDesign in Frameworks */ = {isa = PBXBuildFile; productRef = FF0E489F0211C632BCD468A5 /* AppDesign */; };
+		478EA4D86020099303F3A1CA /* BinaryDataKit in Frameworks */ = {isa = PBXBuildFile; productRef = BA2B290E65A1AC694EA67249 /* BinaryDataKit */; };
+		4F5ABFF164D07B2368F677C8 /* URLToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = 0120C9945F8110FAD91B8307 /* URLToolbox */; };
+		6B748C701FE61BBD9DB2A08E /* KeyValueStore in Frameworks */ = {isa = PBXBuildFile; productRef = 4B85897076D120221E39A77D /* KeyValueStore */; };
+		725A906718ABD8A44A54AA80 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 09847A9B45544C6402F19B75 /* Sparkle */; };
+		7270532236CB047F0A842C63 /* AttributionsUI in Frameworks */ = {isa = PBXBuildFile; productRef = D6B63F5BBA7B1CFC5D809285 /* AttributionsUI */; };
+		7D1FE383C91E7F77FE5E491F /* MessagePackKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7496030AABAC26A665664CB6 /* MessagePackKit */; };
+		7F139CA74878149BC48A5019 /* UserDefaultsUI in Frameworks */ = {isa = PBXBuildFile; productRef = E911CA0DAE7A52FA3FCB7470 /* UserDefaultsUI */; };
+		96F494F85A6B58706F649D41 /* MathKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA366D6F6AE4D4A3C21CF89 /* MathKit */; };
+		9F1787C3B331B93F934A8F5B /* AppRouting in Frameworks */ = {isa = PBXBuildFile; productRef = A2E9481D45CBD827BD4D613F /* AppRouting */; };
+		A1B2C3D4E5F60718293A4B5C /* ModelForgeKit in Frameworks */ = {isa = PBXBuildFile; productRef = C1B2C3D4E5F60718293A4B5C /* ModelForgeKit */; };
+		BB1B0C2184ACE608AB6CC8F6 /* TextToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = 0114147E01DBCFD81CD4789F /* TextToolbox */; };
+		C675544340BA182D8C89EF4F /* CGMath in Frameworks */ = {isa = PBXBuildFile; productRef = 96B2BE6AACAD97F6B188C9BD /* CGMath */; };
+		D62DF53963803E9077611ED1 /* Zipcode in Frameworks */ = {isa = PBXBuildFile; productRef = 94271E2FCFA96AD115B1B197 /* Zipcode */; };
+		DC35F4CD8200A45C6637E256 /* SwiftUIToolbox in Frameworks */ = {isa = PBXBuildFile; productRef = 3D57237CB9E81384494C3320 /* SwiftUIToolbox */; };
+		E1C0000000000000000000C1 /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B1 /* MCP */; };
+		E1C0000000000000000000C2 /* NIOCore in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B2 /* NIOCore */; };
+		E1C0000000000000000000C3 /* NIOHTTP1 in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B3 /* NIOHTTP1 */; };
+		E1C0000000000000000000C4 /* NIOPosix in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B4 /* NIOPosix */; };
+		EB250221DB6C956A7BBF8869 /* Markin in Frameworks */ = {isa = PBXBuildFile; productRef = A53779B09BD5AAFE662EDB09 /* Markin */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		49F1A39D6E229ADE479CB713 /* AppDesign */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppDesign; path = Packages/AppDesign; sourceTree = SOURCE_ROOT; };
+		A89F95A1A8D4D90B814A284D /* ModelForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1B2C3D4E5F60718293A4B5C /* ModelForgeKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ModelForgeKit; path = Packages/ModelForgeKit; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8860A0DE19842323DDF1321B /* Exceptions for "ModelForge" folder in "ModelForge" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				macOS/Info.plist,
+			);
+			target = 1F9E0DF1ED77E28E8A30CF05 /* ModelForge */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5FCFE78FB475C2C63FA3C10C /* ModelForge */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8860A0DE19842323DDF1321B /* Exceptions for "ModelForge" folder in "ModelForge" target */,
+			);
+			path = ModelForge;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C317A7268070BBD8193D932E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4198263A768503A2AABA6850 /* AppDesign in Frameworks */,
+				A1B2C3D4E5F60718293A4B5C /* ModelForgeKit in Frameworks */,
+				E1C0000000000000000000C1 /* MCP in Frameworks */,
+				E1C0000000000000000000C2 /* NIOCore in Frameworks */,
+				E1C0000000000000000000C3 /* NIOHTTP1 in Frameworks */,
+				E1C0000000000000000000C4 /* NIOPosix in Frameworks */,
+				725A906718ABD8A44A54AA80 /* Sparkle in Frameworks */,
+				9F1787C3B331B93F934A8F5B /* AppRouting in Frameworks */,
+				7270532236CB047F0A842C63 /* AttributionsUI in Frameworks */,
+				478EA4D86020099303F3A1CA /* BinaryDataKit in Frameworks */,
+				C675544340BA182D8C89EF4F /* CGMath in Frameworks */,
+				1B135662F707D0495236A475 /* CollectionKit in Frameworks */,
+				05873CA4AAC12962D5728192 /* Constructs in Frameworks */,
+				6B748C701FE61BBD9DB2A08E /* KeyValueStore in Frameworks */,
+				3B0FF1CB1FE693191CCF227D /* MarkdownUI in Frameworks */,
+				EB250221DB6C956A7BBF8869 /* Markin in Frameworks */,
+				96F494F85A6B58706F649D41 /* MathKit in Frameworks */,
+				7D1FE383C91E7F77FE5E491F /* MessagePackKit in Frameworks */,
+				1202AF1B815C94DBDE14E54F /* SensibleStyling in Frameworks */,
+				389EDFD205287F36156C4605 /* SettingsUI in Frameworks */,
+				DC35F4CD8200A45C6637E256 /* SwiftUIToolbox in Frameworks */,
+				3527314D8F57BB2303D5B0A3 /* SystemKit in Frameworks */,
+				BB1B0C2184ACE608AB6CC8F6 /* TextToolbox in Frameworks */,
+				4F5ABFF164D07B2368F677C8 /* URLToolbox in Frameworks */,
+				7F139CA74878149BC48A5019 /* UserDefaultsUI in Frameworks */,
+				D62DF53963803E9077611ED1 /* Zipcode in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5F8470607D6FB8EF04CBBD47 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				49F1A39D6E229ADE479CB713 /* AppDesign */,
+				B1B2C3D4E5F60718293A4B5C /* ModelForgeKit */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		9D85BBD84D5F62334F905FAB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A89F95A1A8D4D90B814A284D /* ModelForge.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F35AE8080822586071440EE9 = {
+			isa = PBXGroup;
+			children = (
+				5FCFE78FB475C2C63FA3C10C /* ModelForge */,
+				5F8470607D6FB8EF04CBBD47 /* Packages */,
+				9D85BBD84D5F62334F905FAB /* Products */,
+			);
+			indentWidth = 4;
+			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 0;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F9E0DF1ED77E28E8A30CF05 /* ModelForge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4F3C8173F7BBDF1B5303FBE /* Build configuration list for PBXNativeTarget "ModelForge" */;
+			buildPhases = (
+				12C812091C6D27BFAC0B34DF /* Sources */,
+				5983FD27ECE4CC6E6B8F31AB /* Resources */,
+				C317A7268070BBD8193D932E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5FCFE78FB475C2C63FA3C10C /* ModelForge */,
+			);
+			name = ModelForge;
+			packageProductDependencies = (
+				FF0E489F0211C632BCD468A5 /* AppDesign */,
+				C1B2C3D4E5F60718293A4B5C /* ModelForgeKit */,
+				E1B0000000000000000000B1 /* MCP */,
+				E1B0000000000000000000B2 /* NIOCore */,
+				E1B0000000000000000000B3 /* NIOHTTP1 */,
+				E1B0000000000000000000B4 /* NIOPosix */,
+				09847A9B45544C6402F19B75 /* Sparkle */,
+				A2E9481D45CBD827BD4D613F /* AppRouting */,
+				D6B63F5BBA7B1CFC5D809285 /* AttributionsUI */,
+				BA2B290E65A1AC694EA67249 /* BinaryDataKit */,
+				96B2BE6AACAD97F6B188C9BD /* CGMath */,
+				E6E36CABE14EAC6AF1621401 /* CollectionKit */,
+				56671155D5D916AD9C1FB0D6 /* Constructs */,
+				4B85897076D120221E39A77D /* KeyValueStore */,
+				BFC4DE29E61EDCC74AA43BBB /* MarkdownUI */,
+				A53779B09BD5AAFE662EDB09 /* Markin */,
+				3BA366D6F6AE4D4A3C21CF89 /* MathKit */,
+				7496030AABAC26A665664CB6 /* MessagePackKit */,
+				8AD8B0784303D80B96FD4C49 /* SensibleStyling */,
+				BF28007D487184AB37F51537 /* SettingsUI */,
+				3D57237CB9E81384494C3320 /* SwiftUIToolbox */,
+				6E0B8130FE0D2B87B606ADA9 /* SystemKit */,
+				0114147E01DBCFD81CD4789F /* TextToolbox */,
+				0120C9945F8110FAD91B8307 /* URLToolbox */,
+				E911CA0DAE7A52FA3FCB7470 /* UserDefaultsUI */,
+				94271E2FCFA96AD115B1B197 /* Zipcode */,
+			);
+			productName = ModelForge;
+			productReference = A89F95A1A8D4D90B814A284D /* ModelForge.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4DD27AB3F5D05612701B0F36 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				ORGANIZATIONNAME = "Martin Johannesson";
+			};
+			buildConfigurationList = C9DF1624A854A83FBCFF76BC /* Build configuration list for PBXProject "ModelForge" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F35AE8080822586071440EE9;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F2EBE16D5D08371504CA4371 /* XCRemoteSwiftPackageReference "AppRouting" */,
+				66FEEE436023F98FA6125793 /* XCRemoteSwiftPackageReference "AttributionsUI" */,
+				DD1B6BCC38542D84DC67AA6C /* XCRemoteSwiftPackageReference "BinaryDataKit" */,
+				89EEF1FF7D011730B5EB3C27 /* XCRemoteSwiftPackageReference "CGMath" */,
+				2CA7B241E3C540A933DB4B35 /* XCRemoteSwiftPackageReference "CollectionKit" */,
+				4B7C25197B60392BC0EBD246 /* XCRemoteSwiftPackageReference "Constructs" */,
+				6B6E3136C1BFF2E826648073 /* XCRemoteSwiftPackageReference "KeyValueStore" */,
+				67C0B6C3B7035093E433634E /* XCRemoteSwiftPackageReference "MarkdownUI" */,
+				F7E8D4C167A2AECB9AA36537 /* XCRemoteSwiftPackageReference "Markin" */,
+				78261508A4EB061238F377A1 /* XCRemoteSwiftPackageReference "MathKit" */,
+				F651282F1F5CF37299C6A7EA /* XCRemoteSwiftPackageReference "MessagePackKit" */,
+				57D7D84181232B9D2E3016D0 /* XCRemoteSwiftPackageReference "SensibleStyling" */,
+				E7E27A51B4EEDD4ED37D1F33 /* XCRemoteSwiftPackageReference "SettingsUI" */,
+				B6DDFEFD4CAD09A985BA1922 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				080DDE41CCF02DCF6CA57962 /* XCRemoteSwiftPackageReference "SwiftUIToolbox" */,
+				45FC5D605144F6637C1D3A35 /* XCRemoteSwiftPackageReference "SystemKit" */,
+				6E0C8A5651FFC1EB786D4543 /* XCRemoteSwiftPackageReference "TextToolbox" */,
+				F57B36911FA470BF8B31E607 /* XCRemoteSwiftPackageReference "URLToolbox" */,
+				2F0C4A3ADA65B35AA7D4E43F /* XCRemoteSwiftPackageReference "UserDefaultsUI" */,
+				A3F4AD4E5749195AE56832C5 /* XCRemoteSwiftPackageReference "Zipcode" */,
+				A0B6D776E0D146D1A3B35D87 /* XCLocalSwiftPackageReference "Packages/AppDesign" */,
+				D1B2C3D4E5F60718293A4B5C /* XCLocalSwiftPackageReference "Packages/ModelForgeKit" */,
+				E1A0000000000000000000A1 /* XCRemoteSwiftPackageReference "swift-sdk" */,
+				E1A0000000000000000000A2 /* XCRemoteSwiftPackageReference "swift-nio" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9D85BBD84D5F62334F905FAB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F9E0DF1ED77E28E8A30CF05 /* ModelForge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5983FD27ECE4CC6E6B8F31AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		12C812091C6D27BFAC0B34DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0B87F73DCA6E9DF7B38714 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Martin Johannesson. All rights reserved.";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.2;
+			};
+			name = Debug;
+		};
+		95E78C8D7DF5A198B2D3E226 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Martin Johannesson. All rights reserved.";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.2;
+			};
+			name = Release;
+		};
+		A083313A17C7ACCF29299467 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = DefaultAppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_ASSET_PATHS = "\"ModelForge/Preview Content\"";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ModelForge/macOS/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pizza.martin.ModelForge;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E4AEF7B0A9EF8C67269662BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = DefaultAppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_ASSET_PATHS = "\"ModelForge/Preview Content\"";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ModelForge/macOS/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pizza.martin.ModelForge;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A4F3C8173F7BBDF1B5303FBE /* Build configuration list for PBXNativeTarget "ModelForge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4AEF7B0A9EF8C67269662BE /* Debug */,
+				A083313A17C7ACCF29299467 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C9DF1624A854A83FBCFF76BC /* Build configuration list for PBXProject "ModelForge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0B87F73DCA6E9DF7B38714 /* Debug */,
+				95E78C8D7DF5A198B2D3E226 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A0B6D776E0D146D1A3B35D87 /* XCLocalSwiftPackageReference "Packages/AppDesign" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/AppDesign;
+		};
+		D1B2C3D4E5F60718293A4B5C /* XCLocalSwiftPackageReference "Packages/ModelForgeKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/ModelForgeKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		080DDE41CCF02DCF6CA57962 /* XCRemoteSwiftPackageReference "SwiftUIToolbox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/SwiftUIToolbox.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.0;
+			};
+		};
+		2CA7B241E3C540A933DB4B35 /* XCRemoteSwiftPackageReference "CollectionKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/CollectionKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.1;
+			};
+		};
+		2F0C4A3ADA65B35AA7D4E43F /* XCRemoteSwiftPackageReference "UserDefaultsUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/UserDefaultsUI.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.1;
+			};
+		};
+		45FC5D605144F6637C1D3A35 /* XCRemoteSwiftPackageReference "SystemKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/SystemKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.8.0;
+			};
+		};
+		4B7C25197B60392BC0EBD246 /* XCRemoteSwiftPackageReference "Constructs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/Constructs.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.1.2;
+			};
+		};
+		57D7D84181232B9D2E3016D0 /* XCRemoteSwiftPackageReference "SensibleStyling" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/SensibleStyling.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.2.1;
+			};
+		};
+		66FEEE436023F98FA6125793 /* XCRemoteSwiftPackageReference "AttributionsUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/AttributionsUI.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.1;
+			};
+		};
+		67C0B6C3B7035093E433634E /* XCRemoteSwiftPackageReference "MarkdownUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/MarkdownUI.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.1;
+			};
+		};
+		6B6E3136C1BFF2E826648073 /* XCRemoteSwiftPackageReference "KeyValueStore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/KeyValueStore.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.2;
+			};
+		};
+		6E0C8A5651FFC1EB786D4543 /* XCRemoteSwiftPackageReference "TextToolbox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/TextToolbox.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.0;
+			};
+		};
+		78261508A4EB061238F377A1 /* XCRemoteSwiftPackageReference "MathKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/MathKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.2.2;
+			};
+		};
+		89EEF1FF7D011730B5EB3C27 /* XCRemoteSwiftPackageReference "CGMath" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/CGMath.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.2;
+			};
+		};
+		A3F4AD4E5749195AE56832C5 /* XCRemoteSwiftPackageReference "Zipcode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/Zipcode.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.1;
+			};
+		};
+		B6DDFEFD4CAD09A985BA1922 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.9.1;
+			};
+		};
+		DD1B6BCC38542D84DC67AA6C /* XCRemoteSwiftPackageReference "BinaryDataKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/BinaryDataKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.7;
+			};
+		};
+		E1A0000000000000000000A1 /* XCRemoteSwiftPackageReference "swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/modelcontextprotocol/swift-sdk.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.12.1;
+			};
+		};
+		E1A0000000000000000000A2 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.101.2;
+			};
+		};
+		E7E27A51B4EEDD4ED37D1F33 /* XCRemoteSwiftPackageReference "SettingsUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/SettingsUI.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.5;
+			};
+		};
+		F2EBE16D5D08371504CA4371 /* XCRemoteSwiftPackageReference "AppRouting" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/AppRouting.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.2;
+			};
+		};
+		F57B36911FA470BF8B31E607 /* XCRemoteSwiftPackageReference "URLToolbox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/URLToolbox.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.3.1;
+			};
+		};
+		F651282F1F5CF37299C6A7EA /* XCRemoteSwiftPackageReference "MessagePackKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/MessagePackKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.1;
+			};
+		};
+		F7E8D4C167A2AECB9AA36537 /* XCRemoteSwiftPackageReference "Markin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apparata/Markin.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0114147E01DBCFD81CD4789F /* TextToolbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6E0C8A5651FFC1EB786D4543 /* XCRemoteSwiftPackageReference "TextToolbox" */;
+			productName = TextToolbox;
+		};
+		0120C9945F8110FAD91B8307 /* URLToolbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F57B36911FA470BF8B31E607 /* XCRemoteSwiftPackageReference "URLToolbox" */;
+			productName = URLToolbox;
+		};
+		09847A9B45544C6402F19B75 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6DDFEFD4CAD09A985BA1922 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+		3BA366D6F6AE4D4A3C21CF89 /* MathKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78261508A4EB061238F377A1 /* XCRemoteSwiftPackageReference "MathKit" */;
+			productName = MathKit;
+		};
+		3D57237CB9E81384494C3320 /* SwiftUIToolbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 080DDE41CCF02DCF6CA57962 /* XCRemoteSwiftPackageReference "SwiftUIToolbox" */;
+			productName = SwiftUIToolbox;
+		};
+		4B85897076D120221E39A77D /* KeyValueStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6B6E3136C1BFF2E826648073 /* XCRemoteSwiftPackageReference "KeyValueStore" */;
+			productName = KeyValueStore;
+		};
+		56671155D5D916AD9C1FB0D6 /* Constructs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B7C25197B60392BC0EBD246 /* XCRemoteSwiftPackageReference "Constructs" */;
+			productName = Constructs;
+		};
+		6E0B8130FE0D2B87B606ADA9 /* SystemKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45FC5D605144F6637C1D3A35 /* XCRemoteSwiftPackageReference "SystemKit" */;
+			productName = SystemKit;
+		};
+		7496030AABAC26A665664CB6 /* MessagePackKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F651282F1F5CF37299C6A7EA /* XCRemoteSwiftPackageReference "MessagePackKit" */;
+			productName = MessagePackKit;
+		};
+		8AD8B0784303D80B96FD4C49 /* SensibleStyling */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 57D7D84181232B9D2E3016D0 /* XCRemoteSwiftPackageReference "SensibleStyling" */;
+			productName = SensibleStyling;
+		};
+		94271E2FCFA96AD115B1B197 /* Zipcode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A3F4AD4E5749195AE56832C5 /* XCRemoteSwiftPackageReference "Zipcode" */;
+			productName = Zipcode;
+		};
+		96B2BE6AACAD97F6B188C9BD /* CGMath */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89EEF1FF7D011730B5EB3C27 /* XCRemoteSwiftPackageReference "CGMath" */;
+			productName = CGMath;
+		};
+		A2E9481D45CBD827BD4D613F /* AppRouting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F2EBE16D5D08371504CA4371 /* XCRemoteSwiftPackageReference "AppRouting" */;
+			productName = AppRouting;
+		};
+		A53779B09BD5AAFE662EDB09 /* Markin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7E8D4C167A2AECB9AA36537 /* XCRemoteSwiftPackageReference "Markin" */;
+			productName = Markin;
+		};
+		BA2B290E65A1AC694EA67249 /* BinaryDataKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD1B6BCC38542D84DC67AA6C /* XCRemoteSwiftPackageReference "BinaryDataKit" */;
+			productName = BinaryDataKit;
+		};
+		BF28007D487184AB37F51537 /* SettingsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7E27A51B4EEDD4ED37D1F33 /* XCRemoteSwiftPackageReference "SettingsUI" */;
+			productName = SettingsUI;
+		};
+		BFC4DE29E61EDCC74AA43BBB /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67C0B6C3B7035093E433634E /* XCRemoteSwiftPackageReference "MarkdownUI" */;
+			productName = MarkdownUI;
+		};
+		C1B2C3D4E5F60718293A4B5C /* ModelForgeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ModelForgeKit;
+		};
+		D6B63F5BBA7B1CFC5D809285 /* AttributionsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66FEEE436023F98FA6125793 /* XCRemoteSwiftPackageReference "AttributionsUI" */;
+			productName = AttributionsUI;
+		};
+		E1B0000000000000000000B1 /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1A0000000000000000000A1 /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
+		};
+		E1B0000000000000000000B2 /* NIOCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1A0000000000000000000A2 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOCore;
+		};
+		E1B0000000000000000000B3 /* NIOHTTP1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1A0000000000000000000A2 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOHTTP1;
+		};
+		E1B0000000000000000000B4 /* NIOPosix */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1A0000000000000000000A2 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOPosix;
+		};
+		E6E36CABE14EAC6AF1621401 /* CollectionKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CA7B241E3C540A933DB4B35 /* XCRemoteSwiftPackageReference "CollectionKit" */;
+			productName = CollectionKit;
+		};
+		E911CA0DAE7A52FA3FCB7470 /* UserDefaultsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F0C4A3ADA65B35AA7D4E43F /* XCRemoteSwiftPackageReference "UserDefaultsUI" */;
+			productName = UserDefaultsUI;
+		};
+		FF0E489F0211C632BCD468A5 /* AppDesign */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppDesign;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 4DD27AB3F5D05612701B0F36 /* Project object */;
+}

@@ -1,0 +1,15 @@
+/// Something that happened to an account.
+@discriminator("kind")
+union UserAction {
+    renamed(RenameAction)
+    changedEmail(ChangeEmailAction)
+}
+
+model RenameAction {
+    /// The name the account now has.
+    name: String
+}
+
+model ChangeEmailAction {
+    email: String?
+}

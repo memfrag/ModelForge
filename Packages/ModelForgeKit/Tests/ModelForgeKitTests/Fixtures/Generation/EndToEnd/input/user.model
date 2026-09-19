@@ -1,0 +1,30 @@
+/// A user account in the application.
+model User {
+    /// Stable account identifier.
+    @json("user_id")
+    id: UserID
+
+    name: String
+    email: String?
+
+    status: UserStatus = .active
+    retries: Int32 = 0
+    ratio: Double = 2
+    tags: [String] = []
+    metadata: Map<String, String> = {}
+
+    createdAt: Instant
+
+    @transient
+    isSelected: Bool = false
+}
+
+/// How far along an account is.
+enum UserStatus {
+    active
+    suspended
+    @json("gone")
+    deleted
+}
+
+typealias UserID = UUID

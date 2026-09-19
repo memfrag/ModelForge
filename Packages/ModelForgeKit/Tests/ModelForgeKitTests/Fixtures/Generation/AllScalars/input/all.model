@@ -1,0 +1,14 @@
+model AllScalars {
+    s: String
+    b: Bool
+    i32: Int32
+    i64: Int64
+    f: Float
+    d: Double
+    dec: Decimal
+    uuid: UUID
+    url: URL
+    date: Date
+    instant: Instant
+    duration: Duration
+}
