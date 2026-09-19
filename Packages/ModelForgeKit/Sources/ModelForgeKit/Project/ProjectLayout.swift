@@ -20,6 +20,14 @@ public enum ProjectLayout {
     /// Files the bundle owns that are not editable sources.
     public static let reservedFileNames: Set<String> = [configurationFileName, manifestFileName]
 
+    /// `name` with the source extension, added only if it is not already there.
+    ///
+    /// The comparison ignores case, like every other name comparison in the project:
+    /// `User.Model` is the file `user.model`, not a file called `User.Model.model`.
+    public static func named(_ name: String) -> String {
+        name.lowercased().hasSuffix(".\(sourceExtension)") ? name : "\(name).\(sourceExtension)"
+    }
+
     public static func isSourceFile(_ name: String) -> Bool {
         name.hasSuffix(".\(sourceExtension)") && !name.hasPrefix(".")
     }

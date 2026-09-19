@@ -60,7 +60,7 @@ import ModelForgeKit
             let problems = result.diagnostics(in: source.id)
             return ModelFileSnapshot(
                 name: source.name,
-                lineCount: source.text.isEmpty ? 0 : source.text.split(separator: "\n", omittingEmptySubsequences: false).count,
+                lineCount: lineCount(of: source.text),
                 errorCount: problems.count { $0.severity == .error },
                 warningCount: problems.count { $0.severity == .warning },
                 declares: result.module.types(in: source.id).map(\.name))
@@ -281,11 +281,16 @@ import ModelForgeKit
                             available: session.document.sources.map(\.name))
     }
 
+    /// Lines as an editor counts them: a file ending in a newline does not have a last,
+    /// empty one.
+    private func lineCount(of text: String) -> Int {
+        guard !text.isEmpty else { return 0 }
+        let breaks = text.count { $0 == "\n" }
+        return text.hasSuffix("\n") ? breaks : breaks + 1
+    }
+
     private func normalizedFileName(_ name: String) -> String {
-        let trimmed = name.trimmingCharacters(in: .whitespaces)
-        return trimmed.hasSuffix(".\(ProjectLayout.sourceExtension)")
-            ? trimmed
-            : "\(trimmed).\(ProjectLayout.sourceExtension)"
+        ProjectLayout.named(name.trimmingCharacters(in: .whitespaces))
     }
 
     private func snapshot(of session: ProjectSession) -> MCPProjectSnapshot {

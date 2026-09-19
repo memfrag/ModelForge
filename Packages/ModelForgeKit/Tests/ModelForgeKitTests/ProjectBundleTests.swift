@@ -146,3 +146,36 @@ struct ProjectBundleTests {
         #expect(!FileManager.default.fileExists(atPath: stale.path))
     }
 }
+
+@Suite("Project layout")
+struct ProjectLayoutTests {
+
+    @Test("A name without the extension gets one")
+    func theExtensionIsAdded() {
+        #expect(ProjectLayout.named("user") == "user.model")
+        #expect(ProjectLayout.named("User") == "User.model")
+    }
+
+    @Test("A name that already carries the extension keeps it, whatever its case")
+    func theExtensionIsNotDoubled() {
+        // `User.Model` is the file `user.model` on the filesystems this runs on, so
+        // appending another extension would quietly create a second file.
+        #expect(ProjectLayout.named("user.model") == "user.model")
+        #expect(ProjectLayout.named("User.Model") == "User.Model")
+        #expect(ProjectLayout.named("USER.MODEL") == "USER.MODEL")
+    }
+
+    @Test("A name that merely contains the extension still gets one")
+    func aMisleadingNameStillGetsTheExtension() {
+        #expect(ProjectLayout.named("model") == "model.model")
+        #expect(ProjectLayout.named("my.model.backup") == "my.model.backup.model")
+    }
+
+    @Test("Only visible .model files are sources")
+    func whatCountsAsASourceFile() {
+        #expect(ProjectLayout.isSourceFile("user.model"))
+        #expect(!ProjectLayout.isSourceFile("README.md"))
+        #expect(!ProjectLayout.isSourceFile(".hidden.model"))
+        #expect(!ProjectLayout.isSourceFile(ProjectLayout.configurationFileName))
+    }
+}

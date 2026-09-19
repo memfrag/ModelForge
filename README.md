@@ -230,6 +230,16 @@ behind an environment variable because it shells out:
 cd Packages/ModelForgeKit && MODELFORGE_COMPILE_TESTS=1 swift test
 ```
 
+The app around it — the document, the session that drives the previews, and the MCP tools —
+has its own suite in the `ModelForgeTests` target, which is what ⌘U runs. It needs the app
+as its host, so it goes through Xcode rather than `swift test`:
+
+```bash
+xcodebuild test -project ModelForge.xcodeproj -scheme "ModelForge (Debug)" -destination 'platform=macOS'
+```
+
+The two suites are separate runs; neither includes the other.
+
 Kotlin needs a JVM toolchain, so it is checked separately — the script uses the compiler
 and JDK bundled with Android Studio and the kotlinx-serialization jars already in your
 Gradle cache, so there is nothing to install:

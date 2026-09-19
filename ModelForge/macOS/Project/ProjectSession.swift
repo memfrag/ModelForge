@@ -82,6 +82,10 @@ import ModelForgeKit
         self.document = document
         self.settings = settings
         self.selection = document.sources.first.map { Selection.file($0.id) } ?? .settings
+        // `didSet` does not run for a value assigned here, and `repairSelectionIfNeeded`
+        // reads a nil `lastSelectedFile` as "this project has never shown a file" — which
+        // is only true of a project that opened empty.
+        if case .file(let id) = selection { lastSelectedFile = id }
     }
 
     // MARK: Document access
@@ -270,9 +274,7 @@ import ModelForgeKit
         let trimmed = newName.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return "The name cannot be empty." }
 
-        let full = trimmed.hasSuffix(".\(ProjectLayout.sourceExtension)")
-            ? trimmed
-            : "\(trimmed).\(ProjectLayout.sourceExtension)"
+        let full = ProjectLayout.named(trimmed)
 
         guard document.isNameAvailable(full, excluding: id) else {
             return "“\(full)” is already used in this project."

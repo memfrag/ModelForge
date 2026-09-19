@@ -48,7 +48,11 @@ nonisolated struct ProjectSnapshot: Sendable, Hashable {
     // MARK: Reading
 
     init(wrapper: FileWrapper) throws {
-        guard let wrappers = wrapper.fileWrappers else {
+        // `isDirectory` first: `fileWrappers` raises an Objective-C exception rather than
+        // returning nil when the wrapper is a regular file, and that cannot be caught from
+        // Swift. A .modelforge that is somehow a flat file has to read as a corrupt project,
+        // not take the app down with it.
+        guard wrapper.isDirectory, let wrappers = wrapper.fileWrappers else {
             throw CocoaError(.fileReadCorruptFile)
         }
 

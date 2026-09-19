@@ -7,9 +7,9 @@ import ModelForgeKit
 
 /// One `.model` file inside a project.
 ///
-/// A value type: the document is a `FileDocument` struct, so editing a source is an
-/// ordinary mutation through the document's binding — which is what makes SwiftUI mark the
-/// project dirty and autosave it, with nothing to remember to call.
+/// A value type, so a project's contents cross to the reader and writer — which run off
+/// the main actor — with no locking. Editing one is an ordinary mutation of the document,
+/// which is what marks the project dirty and gets it autosaved.
 nonisolated struct ProjectSource: Identifiable, Sendable, Hashable {
 
     /// Stable for as long as the project stays open, so diagnostics and generated output

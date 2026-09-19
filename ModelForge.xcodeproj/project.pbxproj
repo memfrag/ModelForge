@@ -33,11 +33,23 @@
 		E1C0000000000000000000C3 /* NIOHTTP1 in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B3 /* NIOHTTP1 */; };
 		E1C0000000000000000000C4 /* NIOPosix in Frameworks */ = {isa = PBXBuildFile; productRef = E1B0000000000000000000B4 /* NIOPosix */; };
 		EB250221DB6C956A7BBF8869 /* Markin in Frameworks */ = {isa = PBXBuildFile; productRef = A53779B09BD5AAFE662EDB09 /* Markin */; };
+		F1A0000000000000000000AC /* ModelForgeKit in Frameworks */ = {isa = PBXBuildFile; productRef = F1A0000000000000000000AB /* ModelForgeKit */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F1A0000000000000000000AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DD27AB3F5D05612701B0F36 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F9E0DF1ED77E28E8A30CF05;
+			remoteInfo = ModelForge;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		49F1A39D6E229ADE479CB713 /* AppDesign */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppDesign; path = Packages/AppDesign; sourceTree = SOURCE_ROOT; };
 		A89F95A1A8D4D90B814A284D /* ModelForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1A0000000000000000000A2 /* ModelForgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ModelForgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -57,6 +69,11 @@
 				8860A0DE19842323DDF1321B /* Exceptions for "ModelForge" folder in "ModelForge" target */,
 			);
 			path = ModelForge;
+			sourceTree = "<group>";
+		};
+		F1A0000000000000000000A3 /* ModelForgeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ModelForgeTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -95,6 +112,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1A0000000000000000000A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1A0000000000000000000AC /* ModelForgeKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -110,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				A89F95A1A8D4D90B814A284D /* ModelForge.app */,
+				F1A0000000000000000000A2 /* ModelForgeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				5FCFE78FB475C2C63FA3C10C /* ModelForge */,
+				F1A0000000000000000000A3 /* ModelForgeTests */,
 				5F8470607D6FB8EF04CBBD47 /* Packages */,
 				9D85BBD84D5F62334F905FAB /* Products */,
 			);
@@ -177,6 +204,29 @@
 			productReference = A89F95A1A8D4D90B814A284D /* ModelForge.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F1A0000000000000000000A1 /* ModelForgeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1A0000000000000000000A6 /* Build configuration list for PBXNativeTarget "ModelForgeTests" */;
+			buildPhases = (
+				F1A0000000000000000000A4 /* Sources */,
+				F1A0000000000000000000A5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1A0000000000000000000A9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F1A0000000000000000000A3 /* ModelForgeTests */,
+			);
+			name = ModelForgeTests;
+			packageProductDependencies = (
+				F1A0000000000000000000AB /* ModelForgeKit */,
+			);
+			productName = ModelForgeTests;
+			productReference = F1A0000000000000000000A2 /* ModelForgeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -228,6 +278,7 @@
 			projectRoot = "";
 			targets = (
 				1F9E0DF1ED77E28E8A30CF05 /* ModelForge */,
+				F1A0000000000000000000A1 /* ModelForgeTests */,
 			);
 		};
 /* End PBXProject section */
@@ -250,7 +301,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1A0000000000000000000A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1A0000000000000000000A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F9E0DF1ED77E28E8A30CF05 /* ModelForge */;
+			targetProxy = F1A0000000000000000000AA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5D0B87F73DCA6E9DF7B38714 /* Debug */ = {
@@ -436,6 +502,44 @@
 			};
 			name = Debug;
 		};
+		F1A0000000000000000000A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pizza.martin.ModelForgeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ModelForge.app/Contents/MacOS/ModelForge";
+			};
+			name = Debug;
+		};
+		F1A0000000000000000000A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pizza.martin.ModelForgeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ModelForge.app/Contents/MacOS/ModelForge";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -453,6 +557,15 @@
 			buildConfigurations = (
 				5D0B87F73DCA6E9DF7B38714 /* Debug */,
 				95E78C8D7DF5A198B2D3E226 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F1A0000000000000000000A6 /* Build configuration list for PBXNativeTarget "ModelForgeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1A0000000000000000000A7 /* Debug */,
+				F1A0000000000000000000A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -777,6 +890,10 @@
 		FF0E489F0211C632BCD468A5 /* AppDesign */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppDesign;
+		};
+		F1A0000000000000000000AB /* ModelForgeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ModelForgeKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

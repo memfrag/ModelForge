@@ -44,6 +44,7 @@ import ModelForgeKit
 
     init(snapshot: ProjectSnapshot = .starter, urlConfiguration: URLDocumentConfiguration? = nil) {
         sources = snapshot.sources
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         configuration = snapshot.configuration
         rawConfiguration = snapshot.rawConfiguration
         loadWarnings = snapshot.warnings
