@@ -23,6 +23,7 @@ struct FileListView: View {
         List(selection: $session.selection) {
             Section {
                 settingsRow
+                graphRow
             }
 
             Section("Models") {
@@ -128,6 +129,23 @@ struct FileListView: View {
             Image(systemName: "gearshape")
         }
         .tag(ProjectSession.Selection.settings)
+    }
+
+    private var graphRow: some View {
+        Label {
+            HStack {
+                Text("Type Graph")
+                Spacer()
+                if !session.typeGraph.isEmpty {
+                    Text("\(session.typeGraph.nodes.count)")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+        } icon: {
+            Image(systemName: "point.3.connected.trianglepath.dotted")
+        }
+        .tag(ProjectSession.Selection.graph)
     }
 
     private func fileRow(_ file: ProjectSource) -> some View {

@@ -69,6 +69,9 @@ struct ProjectWindow: View {
             ProjectSettingsForm(session: session)
                 .background(PaneBackground())
 
+        case .graph:
+            TypeGraphView(session: session, theme: theme)
+
         case .file:
             if let source = session.selectedSource {
                 HSplitView {

@@ -20,6 +20,8 @@ import ModelForgeKit
     /// What the middle and right columns are showing.
     enum Selection: Hashable {
         case settings
+        /// The whole project drawn as types and the references between them.
+        case graph
         case file(SourceFileID)
     }
 
@@ -41,6 +43,12 @@ import ModelForgeKit
     /// the previews and the problems list populated mid-keystroke.
     private(set) var result: CompilationResult?
     private(set) var generated: GeneratedOutput?
+
+    /// The types and their references, from the same compile the previews are drawn from.
+    ///
+    /// Built once when a compile lands rather than on demand: the graph view reads it on
+    /// every redraw, including while the pointer is moving over a node.
+    private(set) var typeGraph = TypeGraph(nodes: [], edges: [])
 
     var previewLanguage: Language = .swift
 
@@ -171,12 +179,16 @@ import ModelForgeKit
             // Detached on purpose: under SE-0461, simply awaiting a nonisolated async
             // function would run it straight back on the main actor.
             let output = await Task.detached(priority: .userInitiated) {
-                CompilePipeline.run(files: files, configuration: configuration)
+                let compiled = CompilePipeline.run(files: files, configuration: configuration)
+                return (result: compiled.result,
+                        generated: compiled.generated,
+                        graph: TypeGraph.build(from: compiled.result.module))
             }.value
 
             guard !Task.isCancelled, let self, self.textVersion == version else { return }
             self.result = output.result
             self.generated = output.generated
+            self.typeGraph = output.graph
         }
     }
 
@@ -215,6 +227,12 @@ import ModelForgeKit
 
     func fileName(for id: SourceFileID) -> String {
         document[id]?.name ?? "?"
+    }
+
+    /// The file being edited, or `nil` when the settings form or the graph is showing.
+    var selectedFileID: SourceFileID? {
+        if case .file(let id) = selection { return id }
+        return nil
     }
 
     func previewFile(for language: Language) -> GeneratedFile? {
@@ -256,6 +274,12 @@ import ModelForgeKit
     /// Reveal a declaration from the types list.
     func reveal(_ type: DeclaredType) {
         reveal(type.nameOrigin)
+    }
+
+    /// Reveal a type picked out of the graph.
+    func reveal(_ node: TypeGraph.Node) {
+        guard let origin = node.origin else { return }
+        reveal(origin)
     }
 
     /// Switch to the file containing `range` if needed, then ask the editor to select it.
