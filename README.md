@@ -110,6 +110,17 @@ suggesting the one you meant.
 
 Swift only. Kotlin has no equivalent and ignores it.
 
+## One layout
+
+There is a single canonical style and no options, because a schema shared by two app teams
+should never show a diff just because somebody's editor indents differently. **Edit ▸ Format
+Model Files** (⌃⌘F) in the app, or `modelgen format`.
+
+It refuses to touch a file that does not parse — rewriting source from a guess at what was
+meant is how a formatter destroys work — and it keeps every comment, including trailing
+ones. Formatting never changes what a file means, which the tests check by comparing the IR
+before and after.
+
 ## Enums a server owns
 
 A closed enum fails the **whole payload** when a backend sends a case the client was never
@@ -154,6 +165,8 @@ swift build -c release --product modelgen --package-path Packages/ModelForgeKit
 modelgen check                  # compile and report problems, write nothing
 modelgen build                  # regenerate into the configured output folders
 modelgen build --verify         # fail if the generated code on disk is out of date
+modelgen format                 # rewrite the .model files in the canonical layout
+modelgen format --verify        # fail if any file is not canonical
 modelgen dump-ir                # print the normalized IR
 ```
 

@@ -292,6 +292,33 @@ import ModelForgeKit
         }
     }
 
+    // MARK: Formatting
+
+    /// Whether anything in the project is not in canonical layout.
+    var hasUnformattedFiles: Bool {
+        document.sources.contains { !SourceFormatter.isFormatted($0.sourceFile) }
+    }
+
+    /// Rewrite every file in the canonical layout.
+    ///
+    /// A file that does not parse is skipped rather than guessed at — the formatter
+    /// refuses, and rewriting source from a guess at what was meant is how a formatter
+    /// destroys work.
+    ///
+    /// - Returns: how many files changed.
+    @discardableResult
+    func formatAllFiles() -> Int {
+        var changed = 0
+        for source in document.sources {
+            guard let formatted = try? SourceFormatter.format(source.sourceFile),
+                  formatted != source.text else { continue }
+            document.updateText(formatted, for: source.id)
+            changed += 1
+        }
+        if changed > 0 { markEdited() }
+        return changed
+    }
+
     // MARK: Configuration
 
     func updateConfiguration(_ change: (inout ProjectConfiguration) -> Void) {

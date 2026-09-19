@@ -17,6 +17,14 @@ struct FileCommands: Commands {
             .keyboardShortcut("n", modifiers: [.command, .shift])
             .disabled(session == nil)
         }
+
+        CommandGroup(after: .pasteboard) {
+            Button("Format Model Files") {
+                session?.formatAllFiles()
+            }
+            .keyboardShortcut("f", modifiers: [.command, .control])
+            .disabled(session?.hasUnformattedFiles != true)
+        }
     }
 }
 

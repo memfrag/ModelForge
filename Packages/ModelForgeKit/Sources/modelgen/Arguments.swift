@@ -10,6 +10,7 @@ struct Arguments {
     enum Command: String, CaseIterable {
         case build
         case check
+        case format
         case dumpIR = "dump-ir"
         case dumpAST = "dump-ast"
         case help
@@ -86,6 +87,7 @@ struct Arguments {
     COMMANDS
         build       Compile and write the generated Swift and Kotlin. The default.
         check       Compile and report problems. Writes nothing.
+        format      Rewrite the .model files in the canonical layout.
         dump-ir     Print the normalized intermediate representation.
         dump-ast    Print the syntax tree.
         help        Show this.
@@ -97,15 +99,16 @@ struct Arguments {
     OPTIONS
         --swift-output <dir>    Override the Swift output folder from Config.json.
         --kotlin-output <dir>   Override the Kotlin output folder.
-        --verify                Fail if the generated code on disk is out of date,
-                                rather than updating it. For CI.
+        --verify                Fail rather than writing: with build, if the generated
+                                code is out of date; with format, if any file is not in
+                                canonical layout. For CI.
         --dry-run, -n           Report what would be written, and write nothing.
         --quiet, -q             Only report problems.
         --help, -h              Show this.
 
     EXIT STATUS
         0   Success, or no changes needed.
-        1   The schema has errors, or --verify found stale output.
+        1   The schema has errors, or --verify found something out of date.
         2   The project could not be read, or the arguments made no sense.
     """
 }

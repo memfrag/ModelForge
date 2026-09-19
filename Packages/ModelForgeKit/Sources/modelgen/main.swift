@@ -83,6 +83,45 @@ case .dumpIR:
     guard !result.hasErrors else { fail(result.summary, code: .schemaProblem) }
     report(IRDumper.dump(result.module), quiet: arguments.isQuiet)
 
+case .format:
+    // Formatting needs the file to parse, so a syntax error is reported the same way as
+    // anywhere else and nothing is rewritten.
+    if result.hasErrors {
+        fail("\(bundle.name): \(result.summary)", code: .schemaProblem)
+    }
+
+    var reformatted: [String] = []
+    for source in bundle.sources {
+        guard let formatted = try? SourceFormatter.format(source), formatted != source.text else {
+            continue
+        }
+        reformatted.append(source.name)
+        if !arguments.verifiesOnly, !arguments.isDryRun {
+            do {
+                try formatted.write(to: bundle.url.appendingPathComponent(source.name),
+                                    atomically: true, encoding: .utf8)
+            } catch {
+                fail("could not write \(source.name): \(error.localizedDescription)")
+            }
+        }
+    }
+
+    guard !reformatted.isEmpty else {
+        report("\(bundle.name): \(bundle.sources.count) file(s) already formatted", quiet: arguments.isQuiet)
+        break
+    }
+
+    let pending = arguments.verifiesOnly || arguments.isDryRun
+    for name in reformatted {
+        report(pending ? "would format \(name)" : "formatted \(name)", quiet: false)
+    }
+    if arguments.verifiesOnly {
+        fail("""
+             \(bundle.name): \(reformatted.count) file(s) are not in canonical layout.
+             Run 'modelgen format' and commit the result.
+             """, code: .schemaProblem)
+    }
+
 case .check:
     if result.hasErrors {
         fail("\(bundle.name): \(result.summary)", code: .schemaProblem)
