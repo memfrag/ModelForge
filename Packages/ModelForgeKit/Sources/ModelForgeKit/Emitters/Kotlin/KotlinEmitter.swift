@@ -201,6 +201,11 @@ struct KotlinEmitter: Emitter {
                       requirements: inout Requirements) {
         requirements.imports.insert("kotlinx.serialization.Serializable")
 
+        guard !definition.isExtensible else {
+            emitExtensible(definition, into: &writer)
+            return
+        }
+
         kdoc(definition.documentation, into: &writer)
         deprecation(definition.deprecation, into: &writer)
         writer.line("@Serializable")
@@ -221,6 +226,37 @@ struct KotlinEmitter: Emitter {
                 writer.line("@SerialName(\"\(escape(enumCase.wireName))\")")
                 writer.line("\(constantName(enumCase.name)),")
             }
+        }
+        writer.line("}")
+    }
+
+    /// An enum that accepts values it does not know.
+    ///
+    /// A value class over `String`: an `enum class` cannot hold a constant it was not
+    /// compiled with, and kotlinx serializes an inline class as its underlying value, so
+    /// this matches the Swift side byte for byte.
+    private func emitExtensible(_ definition: EnumDefinition, into writer: inout CodeWriter) {
+        kdoc(definition.documentation, into: &writer)
+        deprecation(definition.deprecation, into: &writer)
+        writer.line("@Serializable")
+        writer.line("@JvmInline")
+
+        guard !definition.cases.isEmpty else {
+            writer.line("value class \(definition.name)(val rawValue: String)")
+            return
+        }
+
+        writer.line("value class \(definition.name)(val rawValue: String) {")
+        writer.indented { writer in
+            writer.line("companion object {")
+            writer.indented { writer in
+                for enumCase in definition.cases {
+                    kdoc(enumCase.documentation, into: &writer)
+                    deprecation(enumCase.deprecation, into: &writer)
+                    writer.line("val \(constantName(enumCase.name)) = \(definition.name)(\"\(escape(enumCase.wireName))\")")
+                }
+            }
+            writer.line("}")
         }
         writer.line("}")
     }

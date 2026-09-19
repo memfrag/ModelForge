@@ -83,6 +83,22 @@ private struct HelpContent: View {
                     """
                 }
 
+                section("Enums that may grow", """
+                A closed enum fails the whole payload when a backend sends a case this \
+                build has never heard of. @extensible keeps the raw value instead and \
+                round-trips it untouched, on both platforms. The cost is that you can no \
+                longer switch exhaustively — which an enum that may grow could not honestly \
+                offer anyway. Use it for anything a server owns.
+                """) {
+                    """
+                    @extensible
+                    enum UserStatus {
+                        active
+                        suspended
+                    }
+                    """
+                }
+
                 section("Unions", """
                 A union becomes a Swift enum with associated values and a Kotlin sealed \
                 interface. On the wire it is tagged in place: the discriminator sits \

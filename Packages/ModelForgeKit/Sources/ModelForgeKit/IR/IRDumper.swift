@@ -32,7 +32,9 @@ public enum IRDumper {
             return lines
 
         case .enum(let definition):
-            var lines = [indent(level) + "enum \(definition.name)"]
+            var header = "enum \(definition.name)"
+            if definition.isExtensible { header += " extensible" }
+            var lines = [indent(level) + header]
             lines += documentation(definition.documentation, definition.deprecation, level: level + 1)
             for enumCase in definition.cases {
                 var text = "case \(enumCase.name)"

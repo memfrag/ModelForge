@@ -246,6 +246,11 @@ struct SwiftEmitter: Emitter {
     // MARK: Enum
 
     private func emit(_ definition: EnumDefinition, into writer: inout CodeWriter) {
+        guard !definition.isExtensible else {
+            emitExtensible(definition, into: &writer)
+            return
+        }
+
         documentation(definition.documentation, into: &writer)
         availability(definition.deprecation, into: &writer)
 
@@ -265,6 +270,53 @@ struct SwiftEmitter: Emitter {
                 } else {
                     writer.line("case \(escaped(enumCase.name))")
                 }
+            }
+        }
+    }
+
+    /// An enum that accepts values it does not know.
+    ///
+    /// A `RawRepresentable` struct rather than an `enum`, because an enum cannot hold a
+    /// case it was not compiled with. This is the shape Foundation itself uses for
+    /// open-ended string constants, and it round-trips an unfamiliar value untouched
+    /// instead of failing the whole payload.
+    private func emitExtensible(_ definition: EnumDefinition, into writer: inout CodeWriter) {
+        documentation(definition.documentation, into: &writer)
+        availability(definition.deprecation, into: &writer)
+
+        var conformances = ["RawRepresentable"]
+        if configuration.codable { conformances.append("Codable") }
+        conformances.append("Hashable")
+        if configuration.sendable { conformances.append("Sendable") }
+
+        let access = configuration.accessLevel.prefix
+        writer.block("\(access)struct \(definition.name): \(conformances.joined(separator: ", "))") { writer in
+            writer.line("\(access)let rawValue: String")
+            writer.blank()
+            writer.line("\(access)init(rawValue: String) {")
+            writer.indented { $0.line("self.rawValue = rawValue") }
+            writer.line("}")
+
+            if !definition.cases.isEmpty {
+                writer.blank()
+                for enumCase in definition.cases {
+                    documentation(enumCase.documentation, into: &writer)
+                    availability(enumCase.deprecation, into: &writer)
+                    writer.line("\(access)static let \(escaped(enumCase.name)) = \(definition.name)(rawValue: \"\(escape(enumCase.wireName))\")")
+                }
+            }
+
+            guard configuration.codable else { return }
+
+            writer.blank()
+            writer.block("\(access)init(from decoder: any Decoder) throws") { writer in
+                writer.line("self.rawValue = try decoder.singleValueContainer().decode(String.self)")
+            }
+
+            writer.blank()
+            writer.block("\(access)func encode(to encoder: any Encoder) throws") { writer in
+                writer.line("var container = encoder.singleValueContainer()")
+                writer.line("try container.encode(self.rawValue)")
             }
         }
     }

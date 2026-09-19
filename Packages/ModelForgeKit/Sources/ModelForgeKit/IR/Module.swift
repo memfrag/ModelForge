@@ -112,6 +112,13 @@ public struct EnumCaseDefinition: Sendable, Hashable {
 public struct EnumDefinition: Sendable, Hashable {
     public let name: String
     public let cases: [EnumCaseDefinition]
+    /// Whether the enum accepts values it does not know about.
+    ///
+    /// A closed enum fails the whole payload when a backend adds a case, which is the
+    /// failure that takes a shipped app down. An extensible one keeps the raw value and
+    /// round-trips it untouched — at the cost of exhaustive switching, which an enum that
+    /// may grow cannot honestly offer anyway.
+    public let isExtensible: Bool
     public let documentation: [String]
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
@@ -121,9 +128,10 @@ public struct EnumDefinition: Sendable, Hashable {
 
     public init(name: String, cases: [EnumCaseDefinition], documentation: [String],
                 deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?,
-                nameOrigin: SourceRange? = nil) {
+                nameOrigin: SourceRange? = nil, isExtensible: Bool = false) {
         self.name = name
         self.cases = cases
+        self.isExtensible = isExtensible
         self.documentation = documentation
         self.deprecation = deprecation
         self.sourceFile = sourceFile

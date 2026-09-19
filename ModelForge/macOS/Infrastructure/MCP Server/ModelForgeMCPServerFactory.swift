@@ -45,6 +45,9 @@ nonisolated enum ModelForgeMCPServerFactory {
 
         enum UserStatus { active  suspended  deleted }
 
+        @extensible                   // accepts values this build has not heard of,
+        enum Plan { free  pro }       // keeping the raw string; use it for server-owned enums
+
         @discriminator("kind")        // defaults to "type"
         union PaymentMethod {
             card(Card)                // a union case's payload must be a model

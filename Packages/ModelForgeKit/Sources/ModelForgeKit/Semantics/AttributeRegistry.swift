@@ -20,6 +20,8 @@ public struct ResolvedAttributes: Sendable, Hashable {
     /// Set when `@identifiable` is present. The payload is the field to use as the
     /// identity, or `nil` to mean "the field called `id`".
     public var identity: Identity?
+    /// `@extensible`: the enum accepts values it does not know, keeping the raw string.
+    public var isExtensible = false
 
     public struct Identity: Sendable, Hashable {
         public var fieldName: String?
@@ -55,7 +57,16 @@ public enum AttributeRegistry {
               argument: .optionalString),
         .init(name: "discriminator", targets: [.union], argument: .requiredString),
         .init(name: "serializable", targets: [.model, .enum, .union], argument: nil),
-        .init(name: "identifiable", targets: [.model], argument: .optionalString)
+        .init(name: "identifiable", targets: [.model], argument: .optionalString),
+        .init(name: "extensible", targets: [.enum], argument: nil)
+    ]
+
+    /// Attributes that exist now under a different name.
+    ///
+    /// Worth recognising because the design document uses the old spelling, so it is what
+    /// someone reading it will try first.
+    private static let renamedAttributes: [String: String] = [
+        "unknownCase": "use '@extensible' — it keeps the raw value rather than collapsing it to a single unknown case"
     ]
 
     /// Attributes the proposal sketches for a later version. Recognised only so they get a
@@ -63,7 +74,6 @@ public enum AttributeRegistry {
     private static let deferredAttributes: [String: String] = [
         "presence": "field presence is not supported yet; a field is either nullable ('T?') or required",
         "optional": "field presence is not supported yet; write 'T?' to allow a null value",
-        "unknownCase": "unknown-value handling for enums is not supported yet",
         "flatten": "flattened union payloads are not supported yet"
     ]
 
@@ -76,6 +86,14 @@ public enum AttributeRegistry {
 
         for attribute in attributes {
             let name = attribute.name.text
+
+            if let replacement = renamedAttributes[name] {
+                diagnostics.error(.unknownAttribute,
+                                  "'@\(name)' has been renamed",
+                                  at: attribute.range,
+                                  notes: [.init(message: replacement)])
+                continue
+            }
 
             if let explanation = deferredAttributes[name] {
                 diagnostics.error(.unknownAttribute,
@@ -205,6 +223,9 @@ public enum AttributeRegistry {
                 }
                 resolved.identity = ResolvedAttributes.Identity(fieldName: value)
             }
+
+        case "extensible":
+            resolved.isExtensible = true
 
         case "serializable":
             // Everything is serializable already. Saying so is harmless but pointless.

@@ -21,6 +21,7 @@ model User {
 }
 
 /// How far along an account is.
+@extensible
 enum UserStatus {
     active
     suspended

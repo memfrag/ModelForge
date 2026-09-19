@@ -313,7 +313,8 @@ public struct SemanticAnalyzer {
                               documentation: syntax.documentation.map(\.text),
                               deprecation: attributes.deprecation,
                               sourceFile: file, origin: syntax.range,
-                              nameOrigin: syntax.name.range)
+                              nameOrigin: syntax.name.range,
+                              isExtensible: attributes.isExtensible)
     }
 
     private mutating func lowerUnion(_ syntax: UnionSyntax,

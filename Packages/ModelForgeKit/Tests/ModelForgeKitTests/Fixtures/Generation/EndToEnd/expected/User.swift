@@ -82,10 +82,25 @@ struct User: Identifiable, Codable, Equatable, Sendable {
 }
 
 /// How far along an account is.
-enum UserStatus: String, Codable, Sendable {
-    case active
-    case suspended
-    case deleted = "gone"
+struct UserStatus: RawRepresentable, Codable, Hashable, Sendable {
+    let rawValue: String
+
+    init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    static let active = UserStatus(rawValue: "active")
+    static let suspended = UserStatus(rawValue: "suspended")
+    static let deleted = UserStatus(rawValue: "gone")
+
+    init(from decoder: any Decoder) throws {
+        self.rawValue = try decoder.singleValueContainer().decode(String.self)
+    }
+
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.rawValue)
+    }
 }
 
 typealias UserID = UUID

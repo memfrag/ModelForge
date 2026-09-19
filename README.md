@@ -110,6 +110,27 @@ suggesting the one you meant.
 
 Swift only. Kotlin has no equivalent and ignores it.
 
+## Enums a server owns
+
+A closed enum fails the **whole payload** when a backend sends a case the client was never
+compiled with — not just that field. `@extensible` accepts it and keeps the raw value:
+
+```
+@extensible
+enum UserStatus {
+    active
+    suspended
+}
+```
+
+Swift gets a `RawRepresentable` struct and Kotlin a `@JvmInline value class`, because
+neither language's enum can hold a case it was not compiled with. Both decode an unfamiliar
+value and write it back untouched, so a client that re-sends an object does not quietly
+rewrite a status it did not understand.
+
+The cost is exhaustive switching, which an enum that may grow cannot honestly offer anyway.
+Closed enums are still the default — use `@extensible` for anything a server owns.
+
 ## Two things the language does deliberately differently
 
 **There is no `Int`.** It would mean 64 bits in Swift and 32 in Kotlin, so a

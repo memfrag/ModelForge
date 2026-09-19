@@ -38,13 +38,13 @@ data class User(
 
 /** How far along an account is. */
 @Serializable
-enum class UserStatus {
-    @SerialName("active")
-    ACTIVE,
-    @SerialName("suspended")
-    SUSPENDED,
-    @SerialName("gone")
-    DELETED,
+@JvmInline
+value class UserStatus(val rawValue: String) {
+    companion object {
+        val ACTIVE = UserStatus("active")
+        val SUSPENDED = UserStatus("suspended")
+        val DELETED = UserStatus("gone")
+    }
 }
 
 typealias UserID = Uuid
