@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>ModelForge</title>
+        <item>
+            <title>1.0.0</title>
+            <pubDate>Sat, 19 Sep 2026 21:12:04 +0200</pubDate>
+            <sparkle:version>1.0.0</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>27.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/memfrag/ModelForge/releases/download/1.0.0/ModelForge-1.0.0.dmg" length="10052558" type="application/octet-stream" sparkle:edSignature="5FbEkscFH8ccB7sHkbf1ziL1gnAYssNKN9xNkkWeMwrTh+UgFuobp2ZYlaMbCySoMbnWbHx0EaxdbiqFbKZUCQ=="/>
+        </item>
+    </channel>
+</rss>
