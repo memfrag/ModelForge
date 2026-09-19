@@ -3,7 +3,7 @@
 import Foundation
 
 /// A user account in the application.
-struct User: Codable, Equatable, Sendable {
+struct User: Identifiable, Codable, Equatable, Sendable {
     /// Stable account identifier.
     let id: UserID
     let name: String

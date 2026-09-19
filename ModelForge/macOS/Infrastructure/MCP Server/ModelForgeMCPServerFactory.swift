@@ -53,6 +53,11 @@ nonisolated enum ModelForgeMCPServerFactory {
 
         typealias UserID = UUID
 
+        @identifiable                 // Swift Identifiable, using the id field
+        model Account { id: UUID }
+        @identifiable("code")         // or name another field; a bridging id is generated
+        model Country { code: String }
+
     Scalars: String, Bool, Int32, Int64, Float, Double, Decimal, UUID, URL, Date, Instant, Duration.
     Containers: T?, [T], Set<T>, Map<K, V>, and any nesting of those.
 

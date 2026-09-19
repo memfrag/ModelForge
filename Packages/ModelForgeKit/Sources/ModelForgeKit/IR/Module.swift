@@ -42,6 +42,11 @@ public struct FieldDefinition: Sendable, Hashable {
 public struct ModelDefinition: Sendable, Hashable {
     public let name: String
     public let fields: [FieldDefinition]
+    /// The field standing in as the model's identity, when `@identifiable` was written.
+    ///
+    /// Swift-only: it becomes an `Identifiable` conformance. Kotlin has no equivalent, so
+    /// the Kotlin emitter ignores it.
+    public let identityField: String?
     public let documentation: [String]
     public let deprecation: Deprecation?
     public let sourceFile: SourceFileID
@@ -51,9 +56,10 @@ public struct ModelDefinition: Sendable, Hashable {
 
     public init(name: String, fields: [FieldDefinition], documentation: [String],
                 deprecation: Deprecation?, sourceFile: SourceFileID, origin: SourceRange?,
-                nameOrigin: SourceRange? = nil) {
+                nameOrigin: SourceRange? = nil, identityField: String? = nil) {
         self.name = name
         self.fields = fields
+        self.identityField = identityField
         self.documentation = documentation
         self.deprecation = deprecation
         self.sourceFile = sourceFile
@@ -68,6 +74,12 @@ public struct ModelDefinition: Sendable, Hashable {
     /// `Codable` does not implement.
     public var hasDefaults: Bool {
         fields.contains { $0.defaultValue != nil }
+    }
+
+    /// Whether `Identifiable` can be satisfied by the field's own name, with no extra
+    /// property to bridge it.
+    public var identityIsNamedID: Bool {
+        identityField == "id"
     }
 
     /// Whether the emitters need an explicit `CodingKeys` enum.

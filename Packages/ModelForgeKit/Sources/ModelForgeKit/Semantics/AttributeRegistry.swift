@@ -17,6 +17,13 @@ public struct ResolvedAttributes: Sendable, Hashable {
     public var isTransient = false
     public var deprecation: Deprecation?
     public var discriminator: String?
+    /// Set when `@identifiable` is present. The payload is the field to use as the
+    /// identity, or `nil` to mean "the field called `id`".
+    public var identity: Identity?
+
+    public struct Identity: Sendable, Hashable {
+        public var fieldName: String?
+    }
 
     public init() {}
 }
@@ -47,7 +54,8 @@ public enum AttributeRegistry {
               targets: [.model, .enum, .union, .alias, .field, .enumCase, .unionCase],
               argument: .optionalString),
         .init(name: "discriminator", targets: [.union], argument: .requiredString),
-        .init(name: "serializable", targets: [.model, .enum, .union], argument: nil)
+        .init(name: "serializable", targets: [.model, .enum, .union], argument: nil),
+        .init(name: "identifiable", targets: [.model], argument: .optionalString)
     ]
 
     /// Attributes the proposal sketches for a later version. Recognised only so they get a
@@ -184,6 +192,19 @@ public enum AttributeRegistry {
                 return
             }
             resolved.discriminator = value
+
+        case "identifiable":
+            if attribute.arguments.isEmpty {
+                resolved.identity = ResolvedAttributes.Identity(fieldName: nil)
+            } else if let value = stringArgument(attribute, name: name, diagnostics: &diagnostics) {
+                guard !value.isEmpty else {
+                    diagnostics.error(.invalidAttributeArguments,
+                                      "'@identifiable' needs a field name",
+                                      at: attribute.arguments[0].range)
+                    return
+                }
+                resolved.identity = ResolvedAttributes.Identity(fieldName: value)
+            }
 
         case "serializable":
             // Everything is serializable already. Saying so is harmless but pointless.

@@ -83,6 +83,33 @@ A model that uses none of these keeps Swift's synthesized `Codable` and stays un
 parse either, so forcing a coder onto every model holding an identifier would cost more
 than the difference does.
 
+## Identity
+
+`@identifiable` conforms a model to Swift's `Identifiable`, which is what SwiftUI lists
+want:
+
+```
+@identifiable
+model User {
+    id: UUID
+    name: String
+}
+
+@identifiable("code")
+model Country {
+    code: String
+    name: String
+}
+```
+
+The first uses its own `id` field. The second names another field and gets a bridging
+`var id: String { code }`. It is deliberately opt-in per model rather than a project-wide
+setting: a model with no suitable field would produce Swift that does not compile, so
+ModelForge refuses at the schema instead — naming the fields the model does have, or
+suggesting the one you meant.
+
+Swift only. Kotlin has no equivalent and ignores it.
+
 ## Two things the language does deliberately differently
 
 **There is no `Int`.** It would mean 64 bits in Swift and 32 in Kotlin, so a

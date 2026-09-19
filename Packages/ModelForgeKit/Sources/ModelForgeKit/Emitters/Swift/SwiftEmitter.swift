@@ -51,7 +51,23 @@ struct SwiftEmitter: Emitter {
 
     // MARK: Conformances
 
-    private var modelConformances: [String] {
+    private func modelConformances(for model: ModelDefinition) -> [String] {
+        var conformances: [String] = []
+        // Identifiable first: it says what the type *is*, where the others say how it is
+        // handled.
+        if model.identityField != nil { conformances.append("Identifiable") }
+        if configuration.codable { conformances.append("Codable") }
+        if configuration.hashable {
+            conformances.append("Hashable")
+        } else if configuration.equatable {
+            conformances.append("Equatable")
+        }
+        if configuration.sendable { conformances.append("Sendable") }
+        return conformances
+    }
+
+    /// Unions cannot be `Identifiable`, so they take the plain set.
+    private var unionConformances: [String] {
         var conformances: [String] = []
         if configuration.codable { conformances.append("Codable") }
         if configuration.hashable {
@@ -63,9 +79,8 @@ struct SwiftEmitter: Emitter {
         return conformances
     }
 
-    private func inherits(_ extra: [String] = []) -> String {
-        let all = extra + modelConformances
-        return all.isEmpty ? "" : ": " + all.joined(separator: ", ")
+    private func inherits(_ conformances: [String]) -> String {
+        conformances.isEmpty ? "" : ": " + conformances.joined(separator: ", ")
     }
 
     // MARK: Model
@@ -75,7 +90,7 @@ struct SwiftEmitter: Emitter {
         availability(model.deprecation, into: &writer)
 
         let access = configuration.accessLevel.prefix
-        writer.block("\(access)struct \(model.name)\(inherits())") { writer in
+        writer.block("\(access)struct \(model.name)\(inherits(modelConformances(for: model)))") { writer in
             for field in model.fields {
                 documentation(field.documentation, into: &writer)
                 availability(field.deprecation, into: &writer)
@@ -96,6 +111,14 @@ struct SwiftEmitter: Emitter {
             let needsDecoder = configuration.codable && (model.hasDefaults || hasOptional || hasWireConversion)
             let needsEncoder = configuration.codable && (hasOptional || hasWireConversion)
             let needsKeys = model.needsCodingKeys || needsDecoder || needsEncoder
+
+            // A model identified by a field that is not called `id` needs a property to
+            // satisfy `Identifiable`.
+            if let identity = model.identityField, !model.identityIsNamedID,
+               let field = model.fields.first(where: { $0.name == identity }) {
+                writer.blank()
+                writer.line("\(access)var id: \(render(field.type)) { \(escaped(field.name)) }")
+            }
 
             if needsKeys {
                 writer.blank()
@@ -256,7 +279,7 @@ struct SwiftEmitter: Emitter {
 
         let access = configuration.accessLevel.prefix
         let keyword = union.isRecursive ? "indirect enum" : "enum"
-        writer.block("\(access)\(keyword) \(union.name)\(inherits())") { writer in
+        writer.block("\(access)\(keyword) \(union.name)\(inherits(unionConformances))") { writer in
             for unionCase in union.cases {
                 documentation(unionCase.documentation, into: &writer)
                 availability(unionCase.deprecation, into: &writer)

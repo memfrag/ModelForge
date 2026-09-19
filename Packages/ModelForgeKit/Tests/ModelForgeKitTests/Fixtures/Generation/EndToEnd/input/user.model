@@ -1,4 +1,5 @@
 /// A user account in the application.
+@identifiable
 model User {
     /// Stable account identifier.
     @json("user_id")

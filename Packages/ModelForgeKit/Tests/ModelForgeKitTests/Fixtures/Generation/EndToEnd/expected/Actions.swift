@@ -39,9 +39,11 @@ enum UserAction: Codable, Equatable, Sendable {
     }
 }
 
-struct RenameAction: Codable, Equatable, Sendable {
+struct RenameAction: Identifiable, Codable, Equatable, Sendable {
     /// The name the account now has.
     let name: String
+
+    var id: String { name }
 }
 
 struct ChangeEmailAction: Codable, Equatable, Sendable {

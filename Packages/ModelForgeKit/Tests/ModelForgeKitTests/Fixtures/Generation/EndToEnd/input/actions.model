@@ -5,6 +5,7 @@ union UserAction {
     changedEmail(ChangeEmailAction)
 }
 
+@identifiable("name")
 model RenameAction {
     /// The name the account now has.
     name: String

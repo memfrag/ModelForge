@@ -117,6 +117,26 @@ private struct HelpContent: View {
                     """
                 }
 
+                section("Identity", """
+                @identifiable conforms a model to Swift's Identifiable, using its id field. \
+                Name another field to use that instead, and a bridging id property is \
+                generated for you. Swift only — Kotlin has no equivalent.
+                """) {
+                    """
+                    @identifiable
+                    model User {
+                        id: UUID
+                        name: String
+                    }
+
+                    @identifiable("code")
+                    model Country {
+                        code: String
+                        name: String
+                    }
+                    """
+                }
+
                 section("Attributes", """
                 @json renames a field or case on the wire. @transient keeps a field out of \
                 serialization entirely and needs a default. @deprecated carries through to \

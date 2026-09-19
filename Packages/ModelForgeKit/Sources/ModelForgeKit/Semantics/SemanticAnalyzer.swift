@@ -190,13 +190,75 @@ public struct SemanticAnalyzer {
             fields.append(field)
         }
 
+        let identityField = resolveIdentity(attributes.identity,
+                                            of: syntax,
+                                            fields: fields,
+                                            diagnostics: &diagnostics)
+
         let definition = ModelDefinition(name: syntax.name.text, fields: fields,
                                          documentation: syntax.documentation.map(\.text),
                                          deprecation: attributes.deprecation,
                                          sourceFile: file, origin: syntax.range,
-                              nameOrigin: syntax.name.range)
+                                         nameOrigin: syntax.name.range,
+                                         identityField: identityField)
         modelsByName[definition.name] = definition
         return definition
+    }
+
+    /// Work out which field satisfies `Identifiable`, or refuse.
+    ///
+    /// Every rejection here is a case that would otherwise emit Swift that does not
+    /// compile, so each one says which field to name instead.
+    private func resolveIdentity(_ identity: ResolvedAttributes.Identity?,
+                                 of syntax: ModelSyntax,
+                                 fields: [FieldDefinition],
+                                 diagnostics: inout DiagnosticBag) -> String? {
+        guard let identity else { return nil }
+        let range = syntax.name.range
+        let available = fields.map(\.name)
+
+        guard let requested = identity.fieldName else {
+            guard available.contains("id") else {
+                var notes: [Diagnostic.Note] = [
+                    .init(message: "name the field to use, as '@identifiable(\"fieldName\")'")
+                ]
+                if !available.isEmpty {
+                    notes.append(.init(message: "'\(syntax.name.text)' has: \(available.joined(separator: ", "))"))
+                }
+                diagnostics.error(.missingIdentityField,
+                                  "'\(syntax.name.text)' has no field called 'id' to identify it by",
+                                  at: range,
+                                  notes: notes)
+                return nil
+            }
+            return "id"
+        }
+
+        guard available.contains(requested) else {
+            var notes: [Diagnostic.Note] = []
+            if let suggestion = NameSuggestion.closest(to: requested, among: available) {
+                notes.append(.init(message: "did you mean '\(suggestion)'?"))
+            } else if !available.isEmpty {
+                notes.append(.init(message: "'\(syntax.name.text)' has: \(available.joined(separator: ", "))"))
+            }
+            diagnostics.error(.missingIdentityField,
+                              "'\(syntax.name.text)' has no field called '\(requested)'",
+                              at: range,
+                              notes: notes)
+            return nil
+        }
+
+        // Naming another field means generating `var id`, which would collide with a
+        // stored property of the same name.
+        if requested != "id", available.contains("id") {
+            diagnostics.error(.missingIdentityField,
+                              "'\(syntax.name.text)' already has a field called 'id', so it cannot be identified by '\(requested)'",
+                              at: range,
+                              notes: [.init(message: "write '@identifiable' with no argument to use the 'id' field")])
+            return nil
+        }
+
+        return requested
     }
 
     private mutating func lowerEnum(_ syntax: EnumSyntax,

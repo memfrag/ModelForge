@@ -43,6 +43,7 @@ public enum DiagnosticCode: String, Sendable, Hashable, CaseIterable {
     case attributeNotAllowedHere
     case redundantAttribute
     case transientRequiresDefault
+    case missingIdentityField
     case duplicateSerializedName
 
     // Semantic: unions
