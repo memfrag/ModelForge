@@ -17,30 +17,3 @@ extension UTType {
     /// the bundle is a container, not an encoding.
     nonisolated static let modelForgeProject = UTType(exportedAs: "pizza.martin.modelforge.project")
 }
-
-nonisolated enum ProjectLayout {
-
-    /// Extension of the project bundle itself.
-    static let bundleExtension = "modelforge"
-
-    /// Extension of the source files inside it.
-    static let sourceExtension = "model"
-
-    static let configurationFileName = "Config.json"
-    static let manifestFileName = "Manifest.json"
-
-    /// Files the bundle owns that are not editable sources.
-    static let reservedFileNames: Set<String> = [configurationFileName, manifestFileName]
-
-    static func isSourceFile(_ name: String) -> Bool {
-        name.hasSuffix(".\(sourceExtension)") && !name.hasPrefix(".")
-    }
-
-    /// What a brand-new project contains.
-    ///
-    /// The text itself lives in ModelForgeKit so the compiler's own test suite can prove it
-    /// parses — see `StarterDocument`.
-    static var starterFileName: String { StarterDocument.fileName }
-
-    static var starterSource: String { StarterDocument.source }
-}

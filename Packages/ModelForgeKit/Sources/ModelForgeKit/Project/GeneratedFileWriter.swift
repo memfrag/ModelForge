@@ -1,34 +1,41 @@
-//
-//  Copyright © 2026 Martin Johannesson. All rights reserved.
-//
-
 import Foundation
-import ModelForgeKit
 
 /// Writes generated code to disk and removes what it no longer produces.
-nonisolated enum GeneratedFileWriter {
+public enum GeneratedFileWriter {
 
-    struct Request: Sendable {
-        let files: [GeneratedFile]
+    public struct Request: Sendable {
+        public let files: [GeneratedFile]
         /// Paths, relative to the project, written by the previous run.
-        let previousManifest: GenerationManifest
-        let swiftDirectory: URL?
-        let kotlinDirectory: URL?
-        let projectDirectory: URL?
+        public let previousManifest: GenerationManifest
+        public let swiftDirectory: URL?
+        public let kotlinDirectory: URL?
+        public let projectDirectory: URL?
+
+        public init(files: [GeneratedFile],
+                    previousManifest: GenerationManifest,
+                    swiftDirectory: URL?,
+                    kotlinDirectory: URL?,
+                    projectDirectory: URL?) {
+            self.files = files
+            self.previousManifest = previousManifest
+            self.swiftDirectory = swiftDirectory
+            self.kotlinDirectory = kotlinDirectory
+            self.projectDirectory = projectDirectory
+        }
     }
 
-    struct Result: Sendable {
-        var written = 0
-        var unchanged = 0
-        var removed = 0
-        var destinations: [URL] = []
-        var manifest = GenerationManifest()
+    public struct Result: Sendable {
+        public var written = 0
+        public var unchanged = 0
+        public var removed = 0
+        public var destinations: [URL] = []
+        public var manifest = GenerationManifest()
     }
 
-    enum WriteError: LocalizedError {
+    public enum WriteError: LocalizedError {
         case noDestination
 
-        var errorDescription: String? {
+        public var errorDescription: String? {
             switch self {
             case .noDestination:
                 "Choose at least one output folder in Project Settings."
@@ -36,7 +43,46 @@ nonisolated enum GeneratedFileWriter {
         }
     }
 
-    static func write(_ request: Request) throws -> Result {
+    /// What `write` would do, without doing it.
+    ///
+    /// This is what makes a CI check possible: generated code is committed, so a schema
+    /// change that nobody regenerated should fail the build rather than drift silently.
+    /// Each line is phrased as the action that is pending.
+    public static func pendingChanges(_ request: Request) -> [String] {
+        var changes: [String] = []
+        var produced: Set<String> = []
+
+        for file in request.files {
+            let directory = switch file.language {
+            case .swift: request.swiftDirectory
+            case .kotlin: request.kotlinDirectory
+            }
+            guard let directory else { continue }
+
+            let url = directory.appendingPathComponent(file.name)
+            let path = OutputLocation.relativePath(from: request.projectDirectory, to: url)
+            produced.insert(path)
+
+            guard let existing = try? String(contentsOf: url, encoding: .utf8) else {
+                changes.append("create \(path)")
+                continue
+            }
+            if existing != file.contents {
+                changes.append("update \(path)")
+            }
+        }
+
+        let previous = Set(request.previousManifest.swiftFiles + request.previousManifest.kotlinFiles)
+        for path in previous.subtracting(produced).sorted() {
+            guard let url = OutputLocation.resolve(path, relativeTo: request.projectDirectory),
+                  FileManager.default.fileExists(atPath: url.path) else { continue }
+            changes.append("remove \(path)")
+        }
+
+        return changes.sorted()
+    }
+
+    public static func write(_ request: Request) throws -> Result {
         guard request.swiftDirectory != nil || request.kotlinDirectory != nil else {
             throw WriteError.noDestination
         }

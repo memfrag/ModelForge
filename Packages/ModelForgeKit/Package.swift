@@ -16,10 +16,14 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "ModelForgeKit", targets: ["ModelForgeKit"])
+        .library(name: "ModelForgeKit", targets: ["ModelForgeKit"]),
+        .executable(name: "modelgen", targets: ["modelgen"])
     ],
     targets: [
         .target(name: "ModelForgeKit"),
+        // A thin wrapper over the library, so a schema can be checked and regenerated from
+        // a build script or CI without the app.
+        .executableTarget(name: "modelgen", dependencies: ["ModelForgeKit"]),
         .testTarget(
             name: "ModelForgeKitTests",
             dependencies: ["ModelForgeKit"],

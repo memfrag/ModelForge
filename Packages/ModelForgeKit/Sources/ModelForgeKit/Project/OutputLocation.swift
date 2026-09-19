@@ -1,7 +1,3 @@
-//
-//  Copyright © 2026 Martin Johannesson. All rights reserved.
-//
-
 import Foundation
 
 /// Where generated files go.
@@ -10,10 +6,10 @@ import Foundation
 /// keep working for anyone else who clones the repository, and mean the same thing to a
 /// future command-line build. An absolute path is accepted and stored as-is for one-off
 /// use.
-nonisolated enum OutputLocation {
+public enum OutputLocation {
 
     /// Turn a chosen folder into the path to store in `Config.json`.
-    static func relativePath(from base: URL?, to target: URL) -> String {
+    public static func relativePath(from base: URL?, to target: URL) -> String {
         guard let base else { return target.path }
 
         let baseComponents = base.standardizedFileURL.resolvingSymlinksInPath().pathComponents
@@ -37,7 +33,7 @@ nonisolated enum OutputLocation {
     }
 
     /// Resolve a stored path against the project bundle.
-    static func resolve(_ path: String, relativeTo base: URL?) -> URL? {
+    public static func resolve(_ path: String, relativeTo base: URL?) -> URL? {
         guard !path.isEmpty else { return nil }
         if path.hasPrefix("/") { return URL(fileURLWithPath: path) }
         if path.hasPrefix("~") {

@@ -121,6 +121,39 @@ from a payload that omits `archived`, on both platforms. Without this, the same 
 would behave differently on each — Swift's synthesized `Codable` throws on a missing key
 while kotlinx applies the default.
 
+## From a build script
+
+`modelgen` is the same compiler without the app, for build scripts and CI:
+
+```bash
+swift build -c release --product modelgen --package-path Packages/ModelForgeKit
+```
+
+```
+modelgen check                  # compile and report problems, write nothing
+modelgen build                  # regenerate into the configured output folders
+modelgen build --verify         # fail if the generated code on disk is out of date
+modelgen dump-ir                # print the normalized IR
+```
+
+Run it from the folder holding your `.modelforge` bundle, or name the bundle. It reads the
+same `Config.json` the app does, so output paths need no repeating.
+
+`--verify` is the one worth wiring into CI. Generated code is committed, so a schema change
+nobody regenerated would otherwise drift silently:
+
+```
+$ modelgen build --verify
+update android/models/User.kt
+update ios/Generated/User.swift
+modelgen: Demo: generated code is out of date (2 file(s)).
+Run 'modelgen build' and commit the result.
+```
+
+Exit status is 0 for success, 1 for a broken schema or stale output, and 2 when the project
+or the arguments could not be understood. Diagnostics print in the same caret format the
+app's problems list uses, so a build log reads the way the editor does.
+
 ## Letting an agent drive it
 
 ModelForge can expose the projects you have open to a coding agent over the Model Context

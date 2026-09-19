@@ -1,7 +1,3 @@
-//
-//  Copyright © 2026 Martin Johannesson. All rights reserved.
-//
-
 import Foundation
 
 /// A record of what Generate last wrote, and where.
@@ -13,28 +9,28 @@ import Foundation
 ///
 /// Only paths ModelForge itself wrote are ever recorded, so hand-written files sharing an
 /// output folder are never at risk.
-nonisolated struct GenerationManifest: Codable, Sendable, Hashable {
+public struct GenerationManifest: Codable, Sendable, Hashable {
 
     /// Paths, relative to the project bundle, written on the last run.
-    var swiftFiles: [String]
-    var kotlinFiles: [String]
+    public var swiftFiles: [String]
+    public var kotlinFiles: [String]
 
-    init(swiftFiles: [String] = [], kotlinFiles: [String] = []) {
+    public init(swiftFiles: [String] = [], kotlinFiles: [String] = []) {
         self.swiftFiles = swiftFiles.sorted()
         self.kotlinFiles = kotlinFiles.sorted()
     }
 
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         swiftFiles.isEmpty && kotlinFiles.isEmpty
     }
 
-    static func decoded(from data: Data) -> GenerationManifest {
+    public static func decoded(from data: Data) -> GenerationManifest {
         // A missing or unreadable manifest is not worth failing a project load over; the
         // worst case is one round of stale files surviving.
         (try? JSONDecoder().decode(GenerationManifest.self, from: data)) ?? GenerationManifest()
     }
 
-    func encoded() throws -> Data {
+    public func encoded() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         return try encoder.encode(self)
