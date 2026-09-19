@@ -4,6 +4,7 @@
 
 import Foundation
 import UniformTypeIdentifiers
+import ModelForgeKit
 
 extension UTType {
 
@@ -37,36 +38,9 @@ nonisolated enum ProjectLayout {
 
     /// What a brand-new project contains.
     ///
-    /// One example file rather than an empty project, so both previews are populated the
-    /// moment a window opens and the language teaches itself.
-    static let starterFileName = "Models.model"
+    /// The text itself lives in ModelForgeKit so the compiler's own test suite can prove it
+    /// parses — see `StarterDocument`.
+    static var starterFileName: String { StarterDocument.fileName }
 
-    static let starterSource = """
-    // Welcome to ModelForge.
-    //
-    // Define your shared data models here and the Swift and Kotlin panes will
-    // keep up as you type. Every .model file in this project shares one
-    // namespace, so types can refer to each other without any imports.
-
-    /// A registered user of the application.
-    model User {
-        /// Stable, server-issued identifier.
-        @json("user_id")
-        id: UUID
-
-        name: String
-        email: String?
-
-        status: UserStatus = .active
-        createdAt: Instant
-    }
-
-    /// Where an account stands right now.
-    enum UserStatus {
-        active
-        suspended
-        deleted
-    }
-
-    """
+    static var starterSource: String { StarterDocument.source }
 }
