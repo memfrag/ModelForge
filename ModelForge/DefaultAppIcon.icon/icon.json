@@ -1,14 +1,21 @@
 {
   "fill" : {
-    "solid" : "gray:1.00000,1.00000"
+    "automatic-gradient" : "display-p3:0.00000,0.00000,0.00000,1.00000"
   },
   "groups" : [
     {
       "layers" : [
         {
           "glass" : false,
-          "image-name" : "hammer-blueprint.png",
-          "name" : "hammer-blueprint"
+          "image-name" : "Image 4.png",
+          "name" : "Image 4",
+          "position" : {
+            "scale" : 0.78,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "shadow" : {
