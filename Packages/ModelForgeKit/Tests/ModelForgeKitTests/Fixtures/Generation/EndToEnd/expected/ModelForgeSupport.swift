@@ -8,14 +8,16 @@ import Foundation
 //   Date      "yyyy-MM-dd"
 //   Duration  ISO-8601 duration, such as PT1M30S
 //
-// Foundation's own Codable conformances do not produce any of these, which is why
+// Foundation's own Codable conformances do not produce any of these, which
+// is why
 // the generated models route these fields through the helpers below.
 
 // MARK: - Date
 
 /// A calendar date with no time and no time zone.
 ///
-/// Foundation has no date-only type — `Date` is an instant — so the schema's
+/// Foundation has no date-only type — `Date` is an instant — so the
+/// schema's
 /// `Date` becomes this, and means the same thing here as it does in the Kotlin
 /// models.
 struct ModelForgeDate: Codable, Hashable, Sendable, Comparable, CustomStringConvertible {
@@ -70,9 +72,10 @@ struct ModelForgeInstant: Codable, Hashable, Sendable {
     init(_ value: Date) { self.value = value }
 
     // Format styles rather than `ISO8601DateFormatter`: the formatter is a
-    // non-`Sendable` class, so holding one in a `static let` is an error under the
-    // Swift 6 language mode — which is the mode the code this lands in is likely to
-    // be built in. These are value types and carry no such problem.
+    // non-`Sendable` class, so holding one in a `static let` is an error
+    // under the Swift 6 language mode, which is the mode the code this
+    // lands in is likely to be built in. These are value types and carry
+    // no such problem.
     private static let withFraction = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
     private static let withoutFraction = Date.ISO8601FormatStyle()
 

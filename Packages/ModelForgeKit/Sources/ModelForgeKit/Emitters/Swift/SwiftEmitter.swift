@@ -510,7 +510,9 @@ struct SwiftEmitter: Emitter {
 
     private func documentation(_ lines: [String], into writer: inout CodeWriter) {
         for line in lines {
-            writer.line(line.isEmpty ? "///" : "/// \(line)")
+            writer.lines(CommentWrapping.lines(for: line,
+                                               prefix: "/// ",
+                                               indent: writer.indentWidth))
         }
     }
 

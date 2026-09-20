@@ -26,14 +26,15 @@ import kotlin.time.Instant
 //   Duration  ISO-8601 duration, such as PT1M30S
 //   Decimal   a JSON number, not a string
 //
-// Supplying these here rather than relying on library serializers is what lets the
-// generated code compile against kotlinx-serialization 1.8 and drop the
-// kotlinx-datetime dependency entirely.
+// Supplying these here rather than relying on library serializers is
+// what lets the generated code compile against kotlinx-serialization
+// 1.8 and drop the kotlinx-datetime dependency entirely.
 
 /// A calendar date with no time and no time zone.
 ///
-/// Declared here rather than mapped to `kotlinx.datetime.LocalDate` so that models
-/// generated from a schema carry no dependency the project did not already have.
+/// Declared here rather than mapped to `kotlinx.datetime.LocalDate`,
+/// so that models generated from a schema carry no dependency the
+/// project did not already have.
 @Serializable(with = ModelForgeDateSerializer::class)
 data class ModelForgeDate(val year: Int, val month: Int, val day: Int) : Comparable<ModelForgeDate> {
 
@@ -84,7 +85,8 @@ object ModelForgeDurationSerializer : KSerializer<Duration> {
     override fun deserialize(decoder: Decoder): Duration = Duration.parse(decoder.decodeString())
 }
 
-/// Written as a JSON number so it matches Swift's `Decimal`, which encodes as one.
+/// Written as a JSON number so it matches Swift's `Decimal`, which
+/// encodes as one.
 object ModelForgeDecimalSerializer : KSerializer<BigDecimal> {
 
     override val descriptor: SerialDescriptor =

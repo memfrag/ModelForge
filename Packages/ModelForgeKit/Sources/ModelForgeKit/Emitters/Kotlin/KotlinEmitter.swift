@@ -373,13 +373,22 @@ struct KotlinEmitter: Emitter {
 
     private func kdoc(_ lines: [String], into writer: inout CodeWriter) {
         guard !lines.isEmpty else { return }
+
+        // The one-line form only when it actually fits on one line. Otherwise it would be
+        // the single longest line in the file.
         if lines.count == 1 {
-            writer.line("/** \(lines[0]) */")
-            return
+            let oneLine = "/** \(lines[0]) */"
+            if CommentWrapping.fits(oneLine, indent: writer.indentWidth) {
+                writer.line(oneLine)
+                return
+            }
         }
+
         writer.line("/**")
         for line in lines {
-            writer.line(line.isEmpty ? " *" : " * \(line)")
+            writer.lines(CommentWrapping.lines(for: line,
+                                               prefix: " * ",
+                                               indent: writer.indentWidth))
         }
         writer.line(" */")
     }

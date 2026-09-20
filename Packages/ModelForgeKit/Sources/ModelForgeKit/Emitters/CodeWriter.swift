@@ -16,6 +16,14 @@ struct CodeWriter {
         self.indentation = indentation
     }
 
+    /// How many columns `line` will put in front of whatever it is given.
+    ///
+    /// Comment wrapping needs it: a doc comment that fits at the top level does not
+    /// necessarily fit once it is a field's, two levels in.
+    var indentWidth: Int {
+        indentation.count * level
+    }
+
     mutating func line(_ text: String) {
         guard !text.isEmpty else {
             blank()
