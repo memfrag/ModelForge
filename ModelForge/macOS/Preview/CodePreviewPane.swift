@@ -18,13 +18,19 @@ struct CodePreviewPane: View {
     private var fontSize: Double { settings.editorFontSize }
 
     var body: some View {
-        switch settings.previewLayout {
-        case .single:
-            pane(for: session.previewLanguage)
-        case .both:
-            VSplitView {
-                pane(for: .swift)
-                pane(for: .kotlin)
+        // The wrapper is not decoration. Without it the `VSplitView` is the horizontal
+        // split's own subview, and a nested split view's width constraints beat the frame
+        // hints put on this column — so choosing Both used to shrink the previews from
+        // 539pt to 321pt and leave them there. Inside a plain container it is just content.
+        VStack(spacing: 0) {
+            switch settings.previewLayout {
+            case .single:
+                pane(for: session.previewLanguage)
+            case .both:
+                VSplitView {
+                    pane(for: .swift)
+                    pane(for: .kotlin)
+                }
             }
         }
     }
@@ -71,13 +77,23 @@ struct CodePreviewPane: View {
         .background(.bar)
     }
 
+    /// The longest of the files on screen, so both gutters are the same width when both
+    /// languages are shown. Zero when only one is, where there is nothing to line up with.
+    private var alignedLineCount: Int {
+        guard settings.previewLayout == .both else { return 0 }
+        return Language.allCases
+            .compactMap { session.previewFile(for: $0)?.contents.count(where: { $0 == "\n" }) }
+            .max() ?? 0
+    }
+
     @ViewBuilder private func content(for language: Language) -> some View {
         if let file = session.previewFile(for: language) {
             GeneratedCodeView(text: file.contents,
                               language: language,
                               knownTypeNames: session.knownTypeNames,
                               theme: theme,
-                              fontSize: fontSize)
+                              fontSize: fontSize,
+                              alignedWith: alignedLineCount)
         } else {
             ContentUnavailableView {
                 Label("Nothing to show", systemImage: "curlybraces")
