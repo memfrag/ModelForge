@@ -64,6 +64,9 @@ import KeyValueStore
     }
 
     /// Whether the preview column shows one language at a time or both stacked.
+    ///
+    /// Both by default: the point of the tool is that one schema produces two languages,
+    /// and a first launch showing only one of them hides half of what it does.
     public var previewLayout: PreviewLayout {
         didSet {
             store.save(previewLayout, for: .previewLayout)
@@ -104,7 +107,7 @@ import KeyValueStore
         colorScheme = self.store.load(.colorScheme, default: .system)
         previewDebounceMilliseconds = self.store.load(.previewDebounceMilliseconds, default: 300)
         editorFontSize = self.store.load(.editorFontSize, default: 13)
-        previewLayout = self.store.load(.previewLayout, default: .single)
+        previewLayout = self.store.load(.previewLayout, default: .both)
         mcpServerEnabled = self.store.load(.mcpServerEnabled, default: false)
         mcpServerPort = self.store.load(.mcpServerPort, default: 8124)
 
