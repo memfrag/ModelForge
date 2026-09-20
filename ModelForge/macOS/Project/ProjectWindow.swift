@@ -114,6 +114,21 @@ struct ProjectWindow: View {
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
+            Picker("Preview", selection: PreviewChoice.binding(session: session,
+                                                               settings: settings)) {
+                ForEach(PreviewChoice.allCases) { option in
+                    Text(option.displayName).tag(option)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .help("Which generated code to show")
+            // Meaningless while the settings form or the graph is up: there is no preview
+            // column on screen to apply it to.
+            .disabled(session.selectedFileID == nil)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
             Button {
                 session.generate()
             } label: {

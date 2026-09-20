@@ -47,3 +47,22 @@ enum PreviewChoice: String, CaseIterable, Identifiable, Hashable {
         }
     }
 }
+
+import SwiftUI
+
+extension PreviewChoice {
+
+    /// Reading combines the window's language with the app's layout; setting writes both
+    /// back. Lives here rather than in the view so the toolbar and the preview column
+    /// cannot drift on what the control means.
+    @MainActor
+    static func binding(session: ProjectSession, settings: AppSettings) -> Binding<PreviewChoice> {
+        Binding(
+            get: { PreviewChoice(layout: settings.previewLayout,
+                                 language: session.previewLanguage) },
+            set: { new in
+                settings.previewLayout = new.layout
+                if let language = new.language { session.previewLanguage = language }
+            })
+    }
+}

@@ -887,13 +887,13 @@
 			package = 2F0C4A3ADA65B35AA7D4E43F /* XCRemoteSwiftPackageReference "UserDefaultsUI" */;
 			productName = UserDefaultsUI;
 		};
-		FF0E489F0211C632BCD468A5 /* AppDesign */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppDesign;
-		};
 		F1A0000000000000000000AB /* ModelForgeKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ModelForgeKit;
+		};
+		FF0E489F0211C632BCD468A5 /* AppDesign */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppDesign;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -17,62 +17,35 @@ struct CodePreviewPane: View {
 
     private var fontSize: Double { settings.editorFontSize }
 
-    /// The picker's selection: reading it combines the window's language with the app's
-    /// layout, and setting it writes both back.
-    private var choice: Binding<PreviewChoice> {
-        Binding(
-            get: { PreviewChoice(layout: settings.previewLayout,
-                                 language: session.previewLanguage) },
-            set: { new in
-                settings.previewLayout = new.layout
-                if let language = new.language { session.previewLanguage = language }
-            })
-    }
-
     var body: some View {
         switch settings.previewLayout {
         case .single:
-            pane(for: session.previewLanguage, showsPicker: true)
+            pane(for: session.previewLanguage)
         case .both:
             VSplitView {
-                // The picker stays at the top of the column in both layouts, rather than
-                // moving to a different pane depending on which one you are in.
-                pane(for: .swift, showsPicker: true)
-                pane(for: .kotlin, showsPicker: false)
+                pane(for: .swift)
+                pane(for: .kotlin)
             }
         }
     }
 
-    private func pane(for language: Language, showsPicker: Bool) -> some View {
+    private func pane(for language: Language) -> some View {
         VStack(spacing: 0) {
-            header(for: language, showsPicker: showsPicker)
+            header(for: language)
             Divider()
             content(for: language)
         }
         .frame(minHeight: 120)
     }
 
-    private func header(for language: Language, showsPicker: Bool) -> some View {
+    /// Every pane says which language it is, the same way: the mark, the name, the file.
+    ///
+    /// The control that chooses between them is in the window toolbar rather than in here,
+    /// so neither pane is the one that happens to carry it.
+    private func header(for language: Language) -> some View {
         HStack(spacing: 8) {
-            if showsPicker {
-                Picker("", selection: choice) {
-                    ForEach(PreviewChoice.allCases) { option in
-                        Text(option.displayName).tag(option)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .fixedSize()
-                .help("Which generated code to show")
-            }
-
-            // No language label next to the picker: the file name below it already ends
-            // in .swift or .kt, and in a column this narrow the two together squeeze the
-            // name down to nothing.
-            if !showsPicker {
-                Text(language.displayName)
-                    .font(.callout.weight(.medium))
-            }
+            LanguageLabel(language: language)
+                .font(.callout.weight(.medium))
 
             if let file = session.previewFile(for: language) {
                 Text(file.name)
