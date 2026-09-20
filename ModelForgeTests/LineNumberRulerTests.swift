@@ -194,3 +194,55 @@ import ModelForgeKit
         #expect(withLane == plain + LineNumberRulerView.markerLaneWidth)
     }
 }
+
+@Suite("Aligning two gutters")
+@MainActor struct GutterAlignmentTests {
+
+    private func ruler(lines: Int, alignedWith minimum: Int = 0) -> LineNumberRulerView {
+        let (scrollView, textView) = CodeTextViewFactory.makeScrollView(editable: false, fontSize: 13)
+        textView.string = (1...max(1, lines)).map { "// line \($0)" }.joined(separator: "\n")
+        let ruler = LineNumberRulerView(textView: textView, scrollView: scrollView)
+        ruler.minimumLineCount = minimum
+        ruler.refresh()
+        return ruler
+    }
+
+    @Test("Left alone, a longer file gets a wider gutter")
+    func differentFilesDiffer() {
+        // Swift output is reliably longer than the Kotlin from the same schema. The Sopa
+        // widget file is 108 lines against Kotlin's 43 — three digits against two — so the
+        // two panes' code starts at different columns.
+        #expect(ruler(lines: 108).ruleThickness > ruler(lines: 43).ruleThickness)
+    }
+
+    @Test("Given the same count to size for, both gutters match")
+    func alignmentMakesThemEqual() {
+        let swift = ruler(lines: 108, alignedWith: 108)
+        let kotlin = ruler(lines: 43, alignedWith: 108)
+
+        #expect(swift.ruleThickness == kotlin.ruleThickness)
+    }
+
+    @Test("A minimum smaller than the file changes nothing")
+    func aSmallerMinimumIsIgnored() {
+        // The gutter still has to fit its own numbers.
+        #expect(ruler(lines: 500, alignedWith: 20).ruleThickness == ruler(lines: 500).ruleThickness)
+    }
+
+    @Test("Zero means size for this file alone")
+    func zeroMeansUnaligned() {
+        #expect(ruler(lines: 43, alignedWith: 0).ruleThickness == ruler(lines: 43).ruleThickness)
+    }
+
+    @Test("Changing the alignment afterwards resizes the gutter")
+    func changingTheMinimumResizes() {
+        let subject = ruler(lines: 43)
+        let before = subject.ruleThickness
+
+        subject.minimumLineCount = 1000
+        #expect(subject.ruleThickness > before)
+
+        subject.minimumLineCount = 0
+        #expect(subject.ruleThickness == before)
+    }
+}

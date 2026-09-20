@@ -321,6 +321,9 @@ struct GeneratedCodeView: NSViewRepresentable {
     let knownTypeNames: Set<String>
     let theme: EditorTheme
     let fontSize: Double
+    /// Size the gutter for at least this many lines, so two previews shown together line
+    /// up. Zero means size it for this file alone.
+    var alignedWith: Int = 0
 
     func makeNSView(context: Context) -> NSScrollView {
         let (scrollView, textView) = CodeTextViewFactory.makeScrollView(editable: false,
@@ -374,12 +377,14 @@ struct GeneratedCodeView: NSViewRepresentable {
 
         func apply(_ view: GeneratedCodeView, to textView: NSTextView, preservingScroll: Bool) {
             pending = view
+            ruler?.minimumLineCount = view.alignedWith
             guard lastText != view.text || lastFontSize != view.fontSize else { return }
             lastText = view.text
             lastFontSize = view.fontSize
 
             let visible = textView.enclosingScrollView?.contentView.bounds.origin
             textView.textStorage?.setAttributedString(attributedString(for: view))
+            ruler?.minimumLineCount = view.alignedWith
             ruler?.refresh()
 
             if preservingScroll, let visible {

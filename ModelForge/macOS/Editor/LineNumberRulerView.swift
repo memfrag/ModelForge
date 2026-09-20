@@ -31,6 +31,16 @@ final class LineNumberRulerView: NSRulerView {
 
     private var font: NSFont
 
+    /// A line count to size the gutter for, when it should be wider than this file needs.
+    ///
+    /// Swift output is reliably longer than the Kotlin generated from the same schema — an
+    /// init, coding keys and a coder against a data class — so one pane is often in three
+    /// digits while the other is in two. Left to themselves the two gutters differ by a
+    /// character and the code in the two panes does not line up.
+    var minimumLineCount = 0 {
+        didSet { if minimumLineCount != oldValue { refresh() } }
+    }
+
     /// Whether this gutter leaves room for problem markers.
     ///
     /// Fixed at construction rather than following whether there are any: a gutter that
@@ -118,7 +128,7 @@ final class LineNumberRulerView: NSRulerView {
         font = Self.rulerFont(matching: codeView.font)
         lineTable = LineTable(utf16: Array(codeView.string.utf16))
 
-        let wanted = Self.thickness(forLineCount: lineTable.lineCount,
+        let wanted = Self.thickness(forLineCount: max(lineTable.lineCount, minimumLineCount),
                                     font: font,
                                     showsMarkers: showsMarkers)
         if wanted != ruleThickness { ruleThickness = wanted }
