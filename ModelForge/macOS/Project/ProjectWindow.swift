@@ -108,6 +108,7 @@ struct ProjectWindow: View {
         }
         .frame(minWidth: 320, idealWidth: 520, maxWidth: .infinity)
         .background(PaneBackground())
+        .background(SplitDividerPosition(name: "project.editorPreview"))
     }
 
     // MARK: Chrome
