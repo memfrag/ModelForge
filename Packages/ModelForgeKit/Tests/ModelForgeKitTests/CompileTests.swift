@@ -27,7 +27,12 @@ struct CompilationTests {
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
-        process.arguments = ["swiftc", "-typecheck", "-parse-as-library"] + swiftFiles.map(\.path)
+        // Swift 6 language mode on purpose. Without it this checks Swift 5 rules, and the
+        // generated code lands in packages that are built as Swift 6 — which is how a
+        // support file holding a non-`Sendable` formatter in a `static let` passed here
+        // and failed in a real project.
+        process.arguments = ["swiftc", "-typecheck", "-parse-as-library", "-swift-version", "6"]
+            + swiftFiles.map(\.path)
 
         let errors = Pipe()
         process.standardError = errors

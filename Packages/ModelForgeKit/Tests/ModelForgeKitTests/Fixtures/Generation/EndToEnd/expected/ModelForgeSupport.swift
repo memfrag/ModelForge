@@ -69,22 +69,17 @@ struct ModelForgeInstant: Codable, Hashable, Sendable {
 
     init(_ value: Date) { self.value = value }
 
-    private static let withFraction: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-
-    private static let withoutFraction: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter
-    }()
+    // Format styles rather than `ISO8601DateFormatter`: the formatter is a
+    // non-`Sendable` class, so holding one in a `static let` is an error under the
+    // Swift 6 language mode — which is the mode the code this lands in is likely to
+    // be built in. These are value types and carry no such problem.
+    private static let withFraction = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
+    private static let withoutFraction = Date.ISO8601FormatStyle()
 
     init(from decoder: any Decoder) throws {
         let text = try decoder.singleValueContainer().decode(String.self)
-        guard let date = Self.withFraction.date(from: text)
-                ?? Self.withoutFraction.date(from: text) else {
+        guard let date = (try? Self.withFraction.parse(text))
+                ?? (try? Self.withoutFraction.parse(text)) else {
             throw DecodingError.dataCorrupted(.init(
                 codingPath: decoder.codingPath,
                 debugDescription: "Expected an ISO-8601 instant, found \(text)."))
@@ -95,8 +90,8 @@ struct ModelForgeInstant: Codable, Hashable, Sendable {
     func encode(to encoder: any Encoder) throws {
         let seconds = value.timeIntervalSince1970
         let text = seconds == seconds.rounded()
-            ? Self.withoutFraction.string(from: value)
-            : Self.withFraction.string(from: value)
+            ? Self.withoutFraction.format(value)
+            : Self.withFraction.format(value)
         var container = encoder.singleValueContainer()
         try container.encode(text)
     }
