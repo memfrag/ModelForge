@@ -23,6 +23,10 @@ struct CodePreviewPane: View {
         // hints put on this column — so choosing Both used to shrink the previews from
         // 539pt to 321pt and leave them there. Inside a plain container it is just content.
         VStack(spacing: 0) {
+            // The split view draws a rule above the lower pane's header. Without this the
+            // upper one has nothing above it and the two headers do not match.
+            Divider()
+
             switch settings.previewLayout {
             case .single:
                 pane(for: session.previewLanguage)
