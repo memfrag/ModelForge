@@ -113,20 +113,17 @@ struct ProjectWindow: View {
     // MARK: Chrome
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
+        // No glass capsule behind either control. The toolbar sits directly above two
+        // panes of code, and a pill of frosted background over the top line of it is the
+        // one place in this window where chrome competes with what is being read.
         ToolbarItem(placement: .primaryAction) {
-            Picker("Preview", selection: PreviewChoice.binding(session: session,
-                                                               settings: settings)) {
-                ForEach(PreviewChoice.allCases) { option in
-                    Text(option.displayName).tag(option)
-                }
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .help("Which generated code to show")
+            previewMenu
+                .help("Which generated code to show")
             // Meaningless while the settings form or the graph is up: there is no preview
             // column on screen to apply it to.
             .disabled(session.selectedFileID == nil)
         }
+        .sharedBackgroundVisibility(.hidden)
 
         ToolbarItem(placement: .primaryAction) {
             Button {
@@ -137,6 +134,30 @@ struct ProjectWindow: View {
             .help(session.generationBlocker ?? "Generate Swift and Kotlin")
             .disabled(!session.canGenerate)
         }
+        .sharedBackgroundVisibility(.hidden)
+    }
+
+    /// A `Menu` rather than a `Picker` with the menu style: a pop-up button in a toolbar
+    /// shows the selected option's image and drops its title, so the closed control would
+    /// say nothing at all when Both was chosen. A menu's label is ours to set.
+    ///
+    /// The options are an inline `Picker` inside it, which is what puts the tick beside the
+    /// current one without drawing it by hand.
+    private var previewMenu: some View {
+        let choice = PreviewChoice.binding(session: session, settings: settings)
+        return Menu {
+            Picker("Preview", selection: choice) {
+                ForEach(PreviewChoice.allCases) { option in
+                    PreviewChoiceLabel(choice: option).tag(option)
+                }
+            }
+            .pickerStyle(.inline)
+            .labelsHidden()
+        } label: {
+            PreviewChoiceLabel(choice: choice.wrappedValue)
+        }
+        .menuStyle(.button)
+        .fixedSize()
     }
 
     @ViewBuilder private var banners: some View {

@@ -50,3 +50,24 @@ struct LanguageLabel: View {
         }
     }
 }
+
+/// One option in the preview selector, with its mark.
+///
+/// `Both` has no language of its own, so it takes a symbol describing the layout — two
+/// panes, one above the other — rather than borrowing one of the two marks.
+struct PreviewChoiceLabel: View {
+
+    let choice: PreviewChoice
+
+    var body: some View {
+        Label {
+            Text(choice.displayName)
+        } icon: {
+            if let language = choice.language {
+                LanguageIcon(language: language, size: 12)
+            } else {
+                Image(systemName: "rectangle.split.1x2")
+            }
+        }
+    }
+}
