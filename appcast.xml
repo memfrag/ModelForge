@@ -3,6 +3,14 @@
     <channel>
         <title>ModelForge</title>
         <item>
+            <title>1.1.0</title>
+            <pubDate>Mon, 21 Sep 2026 22:14:11 +0200</pubDate>
+            <sparkle:version>1.1.0</sparkle:version>
+            <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>27.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/memfrag/ModelForge/releases/download/1.1.0/ModelForge-1.1.0.dmg" length="7030679" type="application/octet-stream" sparkle:edSignature="kbUN9wXHKDv6qNso3eIgXUBK0r99a+SY37t0MfdWxD8brBUT0JrWRgWwdL6esppDN28SzVjYIpkpci0eze6ZDg=="/>
+        </item>
+        <item>
             <title>1.0.0</title>
             <pubDate>Sat, 19 Sep 2026 21:12:04 +0200</pubDate>
             <sparkle:version>1.0.0</sparkle:version>
